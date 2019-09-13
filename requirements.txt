@@ -1,0 +1,7 @@
+uvicorn==0.9.0
+fastapi==0.38.1
+pydantic==0.32.2
+ujson==1.35
+databases==0.2.5
+aiosqlite==0.10.0
+python-dateutil==2.8.0
