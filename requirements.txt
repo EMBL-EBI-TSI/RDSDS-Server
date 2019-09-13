@@ -5,3 +5,4 @@ ujson==1.35
 databases==0.2.5
 aiosqlite==0.10.0
 python-dateutil==2.8.0
+python-dotenv==0.10.3

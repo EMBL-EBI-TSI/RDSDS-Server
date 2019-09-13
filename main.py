@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from enum import Enum
 from pprint import pprint
@@ -12,7 +13,14 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-DATABASE_URL = "sqlite:///./data/dsds.db"
+from dotenv import load_dotenv
+from pathlib import Path  # python3 only
+env_path = Path('.env')
+load_dotenv(dotenv_path=env_path)
+
+HOST = os.getenv("HOST")
+PORT = int(os.getenv("PORT", 8000))
+DATABASE_URL = os.getenv("DATABASE_URL")
 database = databases.Database(DATABASE_URL)
 metadata = sqlalchemy.MetaData()
 
@@ -177,11 +185,11 @@ async def http_exception_handler(request, exc):
 async def get_object(object_id: str, request: Request, expand: bool = False):
     """Returns object metadata, and a list of access methods that can be used to
      fetch object bytes."""
-    client_host = request.client.host
-    if request.client.port != 80:
-        client_port = ":{}".format(request.client.port)
+    client_host = HOST
+    if PORT != 80:
+        client_port = ":{}".format(PORT)
     else:
-        client_port =""
+        client_port = PORT
 
     # Collecting DrsObject
     query = objects.select(objects.c.id == object_id).limit(1)
@@ -251,3 +259,7 @@ async def get_object_access(object_id: str, access_id: str):
     an `access_id` (e.g., for servers that use signed URLs for fetching object bytes).
     """
     raise HTTPException(status_code=501, detail="Access API Path not Implemented")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host=HOST, port=PORT)
