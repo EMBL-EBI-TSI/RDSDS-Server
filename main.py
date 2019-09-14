@@ -12,15 +12,21 @@ from pydantic import BaseModel
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.requests import Request
 from starlette.responses import JSONResponse
+from starlette.middleware.gzip import GZipMiddleware
 
 from dotenv import load_dotenv
 from pathlib import Path  # python3 only
 env_path = Path('.env')
 load_dotenv(dotenv_path=env_path)
 
-HOST = os.getenv("HOST")
+client_host = os.getenv("HOST")
 PORT = int(os.getenv("PORT", 8000))
 DATABASE_URL = os.getenv("DATABASE_URL")
+if PORT != 80:
+    client_port = ":{}".format(PORT)
+else:
+    client_port = PORT
+
 database = databases.Database(DATABASE_URL)
 metadata = sqlalchemy.MetaData()
 
@@ -71,6 +77,7 @@ contents = sqlalchemy.Table(
 router = APIRouter()
 
 app = FastAPI()
+app.add_middleware(GZipMiddleware)
 
 engine = sqlalchemy.create_engine(
     DATABASE_URL, connect_args={"check_same_thread": False}
@@ -110,10 +117,13 @@ class AccessMethod(BaseModel):
 
 class ContentsObject(BaseModel):
     name: str
-    #TODO; Fix id has to be required
-    id: str = None
+    #TODO: Fix id has to be required in spec
+    id: str
     drs_uri: str = None
-    contents: Dict = None
+    contents: List['ContentsObject'] = None
+
+
+ContentsObject.update_forward_refs()
 
 
 class DrsObject(BaseModel):
@@ -173,6 +183,22 @@ async def http_exception_handler(request, exc):
 #     return await database.fetch_all(query)
 
 
+async def collect_sub_objects(object_id):
+    sub_objects_list = []
+    query = contents.select(contents.c.object_id == object_id)
+    sub_objects = await database.fetch_all(query)
+    if len(sub_objects):
+        for sub_obj in sub_objects:
+            so = dict(sub_obj)
+            sub_contents = await collect_sub_objects(so['id'])
+            sub_objects_list.append({
+                'name': os.path.basename(so['name']),
+                'id': so['id'],
+                'drs_uri': "drs://{}{}/{}".format(client_host, client_port, so['id']),
+                'contents': sub_contents
+            })
+    return sub_objects_list
+
 @app.get(
     "/ga4gh/drs/v1/objects/{object_id}",
     response_model=DrsObject,
@@ -185,12 +211,6 @@ async def http_exception_handler(request, exc):
 async def get_object(object_id: str, request: Request, expand: bool = False):
     """Returns object metadata, and a list of access methods that can be used to
      fetch object bytes."""
-    client_host = HOST
-    if PORT != 80:
-        client_port = ":{}".format(PORT)
-    else:
-        client_port = PORT
-
     # Collecting DrsObject
     query = objects.select(objects.c.id == object_id).limit(1)
     object = await database.fetch_all(query)
@@ -215,16 +235,14 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
     object_contents = await database.fetch_all(query)
     object_contents_list = []
     for oc in object_contents:
-        # TODO: Recusive expansion of contents expand=true (currently only at depth=1)
-        query = contents.select(contents.c.object_id == oc['id'])
-        id_exists = await database.fetch_all(query)
-        if len(id_exists):
-            pprint(id_exists)
+        # Collecting Recursive DrsObject > ContentObjects
+        sub_contents_list = await collect_sub_objects(oc['id'])
 
         object_contents_list.append({
             'name': oc['name'],
             'id': oc['id'],
             'drs_uri': "drs://{}{}/{}".format(client_host, client_port, oc['id']),
+            'contents': sub_contents_list
         })
     data['contents'] = object_contents_list
 
@@ -262,4 +280,4 @@ async def get_object_access(object_id: str, access_id: str):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host=HOST, port=PORT)
+    uvicorn.run(app, host=client_host, port=client_port)
