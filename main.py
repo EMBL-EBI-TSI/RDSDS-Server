@@ -214,16 +214,16 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
     """Returns object metadata, and a list of access methods that can be used to
      fetch object bytes."""
     # Collecting DrsObject
-    query = objects.select(objects.c.id == object_id).limit(1)
-    object = await database.fetch_all(query)
-    if not len(object):
+    query = objects.select(objects.c.id == object_id)
+    object = await database.fetch_one(query)
+    if not object:
         return JSONResponse(status_code=404, content={
             "status_code": 404,
             "msg": "Requested DrsObject was not found"
         })
         # raise HTTPException(status_code=404, detail="Requested DrsObject was not found")
 
-    data = dict(object[0])
+    data = dict(object)
     # Generating DrsObject.self_url
     data['self_uri'] = "drs://{}{}/{}".format(client_host, client_port, data['id'])
 
