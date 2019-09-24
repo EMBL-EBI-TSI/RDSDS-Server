@@ -197,6 +197,8 @@ async def collect_sub_objects(object_id):
                 'drs_uri': "drs://{}{}/{}".format(client_host, client_port, so['id']),
                 'contents': sub_contents
             })
+    else:
+        return None
     return sub_objects_list
 
 @app.get(
@@ -235,18 +237,16 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
     object_contents = await database.fetch_all(query)
     object_contents_list = []
     for oc in object_contents:
-        if expand:
-            # Collecting Recursive DrsObject > ContentObjects
-            sub_contents_list = await collect_sub_objects(oc['id'])
-        else:
-            sub_contents_list = []
-
-        object_contents_list.append({
+        d = {
             'name': oc['name'],
             'id': oc['id'],
-            'drs_uri': "drs://{}{}/{}".format(client_host, client_port, oc['id']),
-            'contents': sub_contents_list
-        })
+            'drs_uri': "drs://{}{}/{}".format(client_host, client_port, oc['id'])
+        }
+        # (if expand=true) Collecting Recursive DrsObject > ContentObjects
+        if expand:
+            d['contents'] = await collect_sub_objects(oc['id'])
+        # Add object > content to list
+        object_contents_list.append(d)
     data['contents'] = object_contents_list
 
     # Collecting DrsObject > AccessMethods
