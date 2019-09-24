@@ -235,8 +235,11 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
     object_contents = await database.fetch_all(query)
     object_contents_list = []
     for oc in object_contents:
-        # Collecting Recursive DrsObject > ContentObjects
-        sub_contents_list = await collect_sub_objects(oc['id'])
+        if expand:
+            # Collecting Recursive DrsObject > ContentObjects
+            sub_contents_list = await collect_sub_objects(oc['id'])
+        else:
+            sub_contents_list = []
 
         object_contents_list.append({
             'name': oc['name'],
