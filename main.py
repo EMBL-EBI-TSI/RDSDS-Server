@@ -141,6 +141,10 @@ class DrsObject(BaseModel):
     description: str = None
     aliases: List[str] = None
 
+class Error(BaseModel):
+    msg: str
+    status_code: int = 500
+
 
 @app.on_event("startup")
 async def startup():
@@ -190,15 +194,9 @@ async def healthCheck():
     })
         
         
-
-# TOOD: Add List API
-# @app.get("/ga4gh/drs/v1/objects", response_model=List[DRSObject])
-# async def get_all_objects():
-#     query = objects.select()
-#     return await database.fetch_all(query)
-
-
 async def collect_sub_objects(object_id):
+    global client_host
+    global client_port
     sub_objects_list = []
     query = contents.select(contents.c.object_id == object_id)
     sub_objects = await database.fetch_all(query)
@@ -221,13 +219,27 @@ async def collect_sub_objects(object_id):
     response_model=DrsObject,
     response_model_skip_defaults=True,
     summary="Get info about a `DrsObject`.",
-    tags=["DataRepositoryService"]
-    # TODO: Add additional responses 202, 400, 401, 403, 500
-    # https://fastapi.tiangolo.com/tutorial/additional-responses/
+    tags=["DataRepositoryService"],
+    responses={
+        201: {'model': Error, 'description': "The operation is delayed and will continue asynchronously. The client should retry this same request after the delay specified by Retry-After header."},
+        400: {'model': Error, 'description': "The request is malformed."},
+        401: {'model': Error, 'description': "The request is unauthorized."},
+        403: {'model': Error, 'description': "The requester is not authorized to perform this action."},
+        404: {'model': Error, 'description': "The requested `DrsObject` wasn't found"},
+        500: {'model': Error, 'description': "An unexpected error occurred."}
+    }
 )
 async def get_object(object_id: str, request: Request, expand: bool = False):
     """Returns object metadata, and a list of access methods that can be used to
      fetch object bytes."""
+    global client_host
+    global client_port
+    client_host = request.client.host
+    if request.client.port != 80:
+        client_port = ":{}".format(request.client.port)
+    else:
+        client_port =""
+
     # Collecting DrsObject
     query = objects.select(objects.c.id == object_id)
     object = await database.fetch_one(query)
@@ -236,7 +248,6 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
             "status_code": 404,
             "msg": "Requested DrsObject was not found"
         })
-        # raise HTTPException(status_code=404, detail="Requested DrsObject was not found")
 
     data = dict(object)
     # Generating DrsObject.self_url
