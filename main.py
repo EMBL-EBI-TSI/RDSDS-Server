@@ -231,7 +231,9 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
      fetch object bytes."""
     #global client_host
     #global client_port
-    client_host = request.client.host
+    print(request.headers)
+    
+    client_host = request.headers['host']
     print(client_host)
     if request.client.port != 80:
         client_port = ":{}".format(request.client.port)
