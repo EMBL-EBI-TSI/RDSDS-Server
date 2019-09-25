@@ -19,13 +19,10 @@ from pathlib import Path  # python3 only
 env_path = Path('.env')
 load_dotenv(dotenv_path=env_path)
 
-client_host = os.getenv("HOST")
+HOST = os.getenv("HOST")
 PORT = int(os.getenv("PORT", 5000))
 DATABASE_URL = os.getenv("DATABASE_URL")
-if PORT != 80:
-    client_port = ":{}".format(PORT)
-else:
-    client_port = PORT
+
 
 database = databases.Database(DATABASE_URL.replace("postgres://","postgresql://"))
 metadata = sqlalchemy.MetaData()
@@ -194,9 +191,9 @@ async def healthCheck():
     })
         
         
-async def collect_sub_objects(object_id):
-    global client_host
-    global client_port
+async def collect_sub_objects(client_host, client_port, object_id):
+    #global client_host
+    #global client_port
     sub_objects_list = []
     query = contents.select(contents.c.object_id == object_id)
     sub_objects = await database.fetch_all(query)
@@ -232,9 +229,10 @@ async def collect_sub_objects(object_id):
 async def get_object(object_id: str, request: Request, expand: bool = False):
     """Returns object metadata, and a list of access methods that can be used to
      fetch object bytes."""
-    global client_host
-    global client_port
+    #global client_host
+    #global client_port
     client_host = request.client.host
+    print(client_host)
     if request.client.port != 80:
         client_port = ":{}".format(request.client.port)
     else:
@@ -270,7 +268,7 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
         }
         # (if expand=true) Collecting Recursive DrsObject > ContentObjects
         if expand:
-            d['contents'] = await collect_sub_objects(oc['id'])
+            d['contents'] = await collect_sub_objects(client_host, client_port, oc['id'])
         # Add object > content to list
         object_contents_list.append(d)
     data['contents'] = object_contents_list
@@ -309,4 +307,4 @@ async def get_object_access(object_id: str, access_id: str):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host=client_host, port=client_port)
+    uvicorn.run(app, host=HOST, port=PORT)
