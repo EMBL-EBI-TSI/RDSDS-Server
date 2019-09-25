@@ -184,6 +184,8 @@ async def http_exception_handler(request, exc):
 
 
 async def collect_sub_objects(object_id):
+    global client_host
+    global client_port
     sub_objects_list = []
     query = contents.select(contents.c.object_id == object_id)
     sub_objects = await database.fetch_all(query)
@@ -213,6 +215,14 @@ async def collect_sub_objects(object_id):
 async def get_object(object_id: str, request: Request, expand: bool = False):
     """Returns object metadata, and a list of access methods that can be used to
      fetch object bytes."""
+    global client_host
+    global client_port
+    client_host = request.client.host
+    if request.client.port != 80:
+        client_port = ":{}".format(request.client.port)
+    else:
+        client_port =""
+
     # Collecting DrsObject
     query = objects.select(objects.c.id == object_id)
     object = await database.fetch_one(query)
