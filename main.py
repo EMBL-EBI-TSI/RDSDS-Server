@@ -19,7 +19,7 @@ from pathlib import Path  # python3 only
 env_path = Path('.env')
 load_dotenv(dotenv_path=env_path)
 
-HOST = os.getenv("HOST")
+client_host = os.getenv("HOST")
 PORT = int(os.getenv("PORT", 5000))
 DATABASE_URL = os.getenv("DATABASE_URL")
 if PORT != 80:
