@@ -191,7 +191,7 @@ async def healthCheck():
     })
         
         
-async def collect_sub_objects(client_host, client_port, object_id):
+async def collect_sub_objects(client_host, object_id):
     #global client_host
     #global client_port
     sub_objects_list = []
@@ -204,7 +204,7 @@ async def collect_sub_objects(client_host, client_port, object_id):
             sub_objects_list.append({
                 'name': os.path.basename(so['name']),
                 'id': so['id'],
-                'drs_uri': "drs://{}{}/{}".format(client_host, client_port, so['id']),
+                'drs_uri': "drs://{}/{}".format(client_host, so['id']),
                 'contents': sub_contents
             })
     else:
@@ -231,14 +231,14 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
      fetch object bytes."""
     #global client_host
     #global client_port
-    print(request.headers)
+    #print(request.headers)
     
     client_host = request.headers['host']
-    print(client_host)
-    if request.client.port != 80:
-        client_port = ":{}".format(request.client.port)
-    else:
-        client_port =""
+    #print(client_host)
+    #if request.client.port != 80:
+    #    client_port = ":{}".format(request.client.port)
+    #else:
+    #    client_port =""
 
     # Collecting DrsObject
     query = objects.select(objects.c.id == object_id)
@@ -251,7 +251,7 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
 
     data = dict(object)
     # Generating DrsObject.self_url
-    data['self_uri'] = "drs://{}{}/{}".format(client_host, client_port, data['id'])
+    data['self_uri'] = "drs://{}/{}".format(client_host, data['id'])
 
     # Collecting DrsObject > Checksums
     query = checksums.select(checksums.c.object_id == object_id)
@@ -266,11 +266,11 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
         d = {
             'name': oc['name'],
             'id': oc['id'],
-            'drs_uri': "drs://{}{}/{}".format(client_host, client_port, oc['id'])
+            'drs_uri': "drs://{}/{}".format(client_host, oc['id'])
         }
         # (if expand=true) Collecting Recursive DrsObject > ContentObjects
         if expand:
-            d['contents'] = await collect_sub_objects(client_host, client_port, oc['id'])
+            d['contents'] = await collect_sub_objects(client_host, oc['id'])
         # Add object > content to list
         object_contents_list.append(d)
     data['contents'] = object_contents_list
