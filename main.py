@@ -176,12 +176,6 @@ async def http_exception_handler(request, exc):
         status_code=exc.status_code
     )
 
-# TOOD: Add List API
-# @app.get("/ga4gh/drs/v1/objects", response_model=List[DRSObject])
-# async def get_all_objects():
-#     query = objects.select()
-#     return await database.fetch_all(query)
-
 
 async def collect_sub_objects(object_id):
     global client_host
