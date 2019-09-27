@@ -179,7 +179,7 @@ async def http_exception_handler(request, exc):
 
 
 @app.get(
-    "/",
+    "/health-check",
     summary="Health Check",
     # TODO: Add additional responses 202, 400, 401, 403, 500
     # https://fastapi.tiangolo.com/tutorial/additional-responses/
