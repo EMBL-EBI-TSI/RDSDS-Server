@@ -38,12 +38,6 @@ def get_csv_files(dataset, bundle):
   return file_list, url_list
 
 
-async def process_dataset(dataset):
-  for directory in os.listdir("data/{}".format(dataset)):
-    print(dataset, str(directory))
-    await process_bundle(dataset, str(directory))
-
-
 async def process_checksums(data):
   object_checksums = {
     'crc32c': data['crc32c'],
@@ -74,8 +68,9 @@ async def process_contents(data):
         split_oc = oc.split('::')
         contents_values.append({
           'object_id': data['id'],
-          'id': split_oc[0],
-          'name': split_oc[1]
+          'type': split_oc[0],
+          'id': split_oc[1],
+          'name': split_oc[2]
         })
   query = contents.insert()
   local_contents_id = await database.execute_many(query, values=contents_values)
@@ -126,6 +121,12 @@ async def process_bundle(dataset, bundle):
 
   await process_objects(hash_data)
   await process_access_methods(url_data)
+
+
+async def process_dataset(dataset):
+  for directory in os.listdir("data/{}".format(dataset)):
+    print(dataset, str(directory))
+    await process_bundle(dataset, str(directory))
 
 
 async def main():

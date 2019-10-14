@@ -66,6 +66,7 @@ contents = sqlalchemy.Table(
     metadata,
     sqlalchemy.Column("object_id", sqlalchemy.String),
     sqlalchemy.Column("id", sqlalchemy.String),
+    sqlalchemy.Column("type", sqlalchemy.String),
     sqlalchemy.Column("name", sqlalchemy.String),
     sqlalchemy.Column("drs_uri", sqlalchemy.String),
 )
