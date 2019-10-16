@@ -1,0 +1,1 @@
+psql ${DATABASE_URL} < data/migrate-db.sql

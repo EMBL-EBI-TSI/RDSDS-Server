@@ -1,0 +1,1 @@
+ALTER TABLE public.contents ADD COLUMN type character varying;
