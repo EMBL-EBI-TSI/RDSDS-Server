@@ -117,6 +117,7 @@ class ContentsObject(BaseModel):
     name: str
     #TODO: Fix id has to be required in spec
     id: str
+    type: str
     drs_uri: str = None
     contents: List['ContentsObject'] = None
 
