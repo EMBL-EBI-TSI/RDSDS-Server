@@ -231,16 +231,7 @@ async def collect_sub_objects(client_host, object_id):
 async def get_object(object_id: str, request: Request, expand: bool = False):
     """Returns object metadata, and a list of access methods that can be used to
      fetch object bytes."""
-    #global client_host
-    #global client_port
-    #print(request.headers)
-    
     client_host = request.headers['host']
-    #print(client_host)
-    #if request.client.port != 80:
-    #    client_port = ":{}".format(request.client.port)
-    #else:
-    #    client_port =""
 
     # Collecting DrsObject
     query = objects.select(objects.c.id == object_id)
