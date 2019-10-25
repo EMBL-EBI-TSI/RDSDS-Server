@@ -1,3 +1,5 @@
+from pydantic import BaseModel
+
 class Checksum(BaseModel):
     type: str
     checksum: str
