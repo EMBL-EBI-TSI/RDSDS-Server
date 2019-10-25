@@ -18,7 +18,7 @@ app.add_event_handler("shutdown", close_postgres_connection)
 app.add_exception_handler(HTTPException, http_exception_handler)
 
 app.include_router(api_router, prefix=API_V1_STR)
-app.include_router(healthcheck_router, prefic="/")
+app.include_router(healthcheck_router, prefix="/")
 
 app.openapi = custom_openapi
 
