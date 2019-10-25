@@ -3,13 +3,13 @@ from app.db.database import db as database
 from app.models.objects import DrsObject, Error, AccessURL
 from starlette.requests import Request
 from starlette.responses import JSONResponse
-import app.db.datamodels
+from app.db.datamodels import objects, checksums, access_methods, contents
 
 router = APIRouter()
 
 
 @router.get(
-    "/ga4gh/drs/v1/objects/{object_id}",
+    "/objects/{object_id}",
     response_model=DrsObject,
     response_model_skip_defaults=True,
     summary="Get info about a `DrsObject`.",
@@ -84,7 +84,7 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
 
 
 @router.get(
-    "/ga4gh/drs/v1/objects/{object_id}/access/{access_id}",
+    "/objects/{object_id}/access/{access_id}",
     response_model=AccessURL,
     summary="Get a URL for fetching bytes.",
     tags=["DataRepositoryService"]
