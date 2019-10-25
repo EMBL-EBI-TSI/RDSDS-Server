@@ -24,6 +24,6 @@ PROJECT_NAME = os.getenv("PROJECT_NAME", "dsds_service")
 API_V1_STR = "/ga4gh/drs/v1"
 
 ### Application config
-HOST = os.getenv("HOST")
+HOST = os.getenv("HOST","0.0.0.0")
 PORT = int(os.getenv("PORT", 5000))
 
