@@ -19,9 +19,6 @@ from pathlib import Path  # python3 only
 env_path = Path('.env')
 
 
-
-
-
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host=HOST, port=PORT)
