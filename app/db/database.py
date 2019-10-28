@@ -1,8 +1,7 @@
-from asyncpg.pool import Pool
-
+import databases.Database
 
 class DataBase:
-    pool: Pool = None
+    db: Database = None
 
 
 db = DataBase()
