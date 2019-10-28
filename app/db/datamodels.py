@@ -1,4 +1,5 @@
 import sqlalchemy
+from app.core.config import DATABASE_URL
 
 metadata = sqlalchemy.MetaData()
 
@@ -45,3 +46,10 @@ contents = sqlalchemy.Table(
     sqlalchemy.Column("name", sqlalchemy.String),
     sqlalchemy.Column("drs_uri", sqlalchemy.String),
 )
+
+engine = sqlalchemy.create_engine(
+    DATABASE_URL
+)
+
+metadata.create_all(engine)
+
