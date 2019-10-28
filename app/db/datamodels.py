@@ -1,5 +1,5 @@
 import sqlalchemy
-from app.core.config import DATABASE_URL
+from app.core.config import DATABASE_URL_STR
 
 metadata = sqlalchemy.MetaData()
 
@@ -48,7 +48,7 @@ contents = sqlalchemy.Table(
 )
 
 engine = sqlalchemy.create_engine(
-    DATABASE_URL
+    DATABASE_URL_STR
 )
 
 metadata.create_all(engine)
