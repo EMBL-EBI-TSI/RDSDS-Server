@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, Depends
 from app.db.database import db as database
 from app.models.objects import DrsObject, Error, AccessURL
