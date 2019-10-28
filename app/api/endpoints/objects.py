@@ -32,9 +32,12 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
 
     # Collecting DrsObject
     query = objects.select(objects.c.id == object_id)
-    logging.info("#### objects:" + objects.columns.keys())
-    logging.info("#### metadata:" + repr(metadata.tables['objects']) )
-    logging.info("#### query:" + query)
+    logging.info("#### objects:")
+    logging.info(objects.columns.keys())
+    logging.info("#### metadata:")
+    logging.info(repr(metadata.tables['objects']) )
+    logging.info("#### query:")
+    logging.info(query)
     object = await database.fetch_one(query)
     if not object:
         return JSONResponse(status_code=404, content={
