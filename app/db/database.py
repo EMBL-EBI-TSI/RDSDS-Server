@@ -1,10 +1,7 @@
 from databases import Database
 
-class DataBase:
-    db: Database = None
 
-
-db = DataBase()
+db = Database
 
 
 async def get_database():
