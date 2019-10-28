@@ -1,4 +1,4 @@
-import databases.Database
+from databases import Database
 
 class DataBase:
     db: Database = None
