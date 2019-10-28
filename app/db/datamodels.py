@@ -1,6 +1,12 @@
 import sqlalchemy
 from app.core.config import DATABASE_URL_STR
 
+engine = sqlalchemy.create_engine(
+    DATABASE_URL_STR
+)
+
+connection = engine.connect()
+
 metadata = sqlalchemy.MetaData()
 
 objects = sqlalchemy.Table(
@@ -45,10 +51,6 @@ contents = sqlalchemy.Table(
     sqlalchemy.Column("type", sqlalchemy.String),
     sqlalchemy.Column("name", sqlalchemy.String),
     sqlalchemy.Column("drs_uri", sqlalchemy.String),
-)
-
-engine = sqlalchemy.create_engine(
-    DATABASE_URL_STR
 )
 
 metadata.create_all(engine)
