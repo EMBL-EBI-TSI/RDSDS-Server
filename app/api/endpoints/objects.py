@@ -9,7 +9,6 @@ from app.db.datamodels import objects, checksums, access_methods, contents
 
 router = APIRouter()
 
-
 @router.get(
     "/objects/{object_id}",
     response_model=DrsObject,
@@ -34,7 +33,7 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
     query = objects.select(objects.c.id == object_id)
     logging.info("#### query:")
     logging.info(query)
-    object = await database.fetch_one(query)
+    object = await database.fetch_one(query=query)
     if not object:
         return JSONResponse(status_code=404, content={
             "status_code": 404,
