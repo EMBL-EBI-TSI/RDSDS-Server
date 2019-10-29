@@ -30,10 +30,12 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
     client_host = request.headers['host']
 
     # Collecting DrsObject
-    query = objects.select(objects.c.id == object_id)
-    logging.info("#### query:")
-    logging.info(query)
-    object = await database.fetch_one(query=query)
+    query1 = objects.select(objects.c.id == object_id)
+    logging.info("#### query1:")
+    logging.info(query1)
+    logging.info("#### database:")
+    logging.info(database)
+    object = await database.fetch_one(query1)
     if not object:
         return JSONResponse(status_code=404, content={
             "status_code": 404,
