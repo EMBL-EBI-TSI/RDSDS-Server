@@ -7,4 +7,4 @@ db = DataBase()
 
 
 async def get_database():
-    return db
+    return db.database
