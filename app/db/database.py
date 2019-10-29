@@ -1,7 +1,7 @@
 from databases import Database
 
 
-db = Database
+db = Database()
 
 
 async def get_database():
