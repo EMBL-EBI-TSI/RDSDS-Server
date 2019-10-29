@@ -1,13 +1,14 @@
 import logging
 
 from fastapi import APIRouter, Depends
-from app.db.database import db as database
+from app.db.database import db
 from app.models.objects import DrsObject, Error, AccessURL
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from app.db.datamodels import objects, checksums, access_methods, contents
 
 router = APIRouter()
+database = db.database
 
 @router.get(
     "/objects/{object_id}",
