@@ -1,14 +1,13 @@
 import logging
 
 from fastapi import APIRouter, Depends
-from app.db.database import db
+from app.db.database import DataBase, get_database
 from app.models.objects import DrsObject, Error, AccessURL
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from app.db.datamodels import objects, checksums, access_methods, contents
 
 router = APIRouter()
-database = db.database
 
 @router.get(
     "/objects/{object_id}",
@@ -25,7 +24,7 @@ database = db.database
         500: {'model': Error, 'description': "An unexpected error occurred."}
     }
 )
-async def get_object(object_id: str, request: Request, expand: bool = False):
+async def get_object(object_id: str, request: Request, expand: bool = False, database: DataBase = Depends(get_database)):
     """Returns object metadata, and a list of access methods that can be used to
      fetch object bytes."""
     client_host = request.headers['host']
