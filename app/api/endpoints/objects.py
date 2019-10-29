@@ -35,7 +35,7 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
     logging.info(query1)
     logging.info("#### database:")
     logging.info(database)
-    object = await database.fetch_one(query1)
+    object = await database.fetch_one(query=query1,values={"id_1": object_id})
     if not object:
         return JSONResponse(status_code=404, content={
             "status_code": 404,
