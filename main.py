@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import FastAPI
 from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
@@ -25,6 +27,8 @@ app.include_router(healthcheck_router)
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
+    
+    logging.info(app.routes)
     openapi_schema = get_openapi(
         title="Reference Data Set Distribution Service",
         description="Provides a GA4GH DRS compatible interface datasets stored within the ELIXIR network",
