@@ -83,10 +83,10 @@ include:
   - template: Jobs/Deploy.gitlab-ci.yml
   #- template: Jobs/Browser-Performance-Testing.gitlab-ci.yml
   - template: Security/DAST.gitlab-ci.yml
-  #- template: Security/Container-Scanning.gitlab-ci.yml
+  - template: Security/Container-Scanning.gitlab-ci.yml
   #- template: Security/Dependency-Scanning.gitlab-ci.yml
-  #- template: Security/License-Management.gitlab-ci.yml
-  #- template: Security/SAST.gitlab-ci.yml
+  - template: Security/License-Management.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
 
 test-server:
   stage: performance
