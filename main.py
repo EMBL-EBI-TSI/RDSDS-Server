@@ -21,7 +21,6 @@ app.add_exception_handler(HTTPException, http_exception_handler)
 app.include_router(api_router, prefix=API_V1_STR)
 app.include_router(healthcheck_router)
 
-app.openapi = custom_openapi
 
 def custom_openapi():
     if app.openapi_schema:
@@ -35,6 +34,9 @@ def custom_openapi():
     openapi_schema['basePath'] = API_V1_STR
     app.openapi_schema = openapi_schema
     return app.openapi_schema
+
+
+app.openapi = custom_openapi
 
 if __name__ == "__main__":
     import uvicorn
