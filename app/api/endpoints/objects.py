@@ -1,13 +1,10 @@
-import logging
-
-from fastapi import APIRouter, Depends
-from app.db.database import DataBase, get_database
+from fastapi import APIRouter, Depends, HTTPException
 from app.models.objects import DrsObject, Error, AccessURL
+from app.business import objects
 from starlette.requests import Request
-from starlette.responses import JSONResponse
-from app.db.datamodels import objects, checksums, access_methods, contents
 
 router = APIRouter()
+
 
 @router.get(
     "/objects/{object_id}",
@@ -24,62 +21,13 @@ router = APIRouter()
         500: {'model': Error, 'description': "An unexpected error occurred."}
     }
 )
-async def get_object(object_id: str, request: Request, expand: bool = False, database: DataBase = Depends(get_database)):
+async def get_object(object_id: str, request: Request):
     """Returns object metadata, and a list of access methods that can be used to
      fetch object bytes."""
     client_host = request.headers['host']
 
     # Collecting DrsObject
-    query = objects.select(objects.c.id == object_id)
-    object = await database.fetch_one(query)
-    logging.info(object)
-    if not object:
-        return JSONResponse(status_code=404, content={
-            "status_code": 404,
-            "msg": "Requested DrsObject was not found"
-        })
-
-    data = dict(object)
-    # Generating DrsObject.self_url
-    data['self_uri'] = "drs://{}/{}".format(client_host, data['id'])
-
-    # Collecting DrsObject > Checksums
-    query = checksums.select(checksums.c.object_id == object_id)
-    object_checksums = await database.fetch_all(query)
-    data['checksums'] = object_checksums
-
-    # Collecting DrsObject > ContentObjects
-    query = contents.select(contents.c.object_id == object_id)
-    object_contents = await database.fetch_all(query)
-    object_contents_list = []
-    for oc in object_contents:
-        d = {
-            'name': oc['name'],
-            'id': oc['id'],
-            'drs_uri': "drs://{}/{}".format(client_host, oc['id'])
-        }
-        # (if expand=true) Collecting Recursive DrsObject > ContentObjects
-        if expand:
-            d['contents'] = await collect_sub_objects(client_host, oc['id'])
-        # Add object > content to list
-        object_contents_list.append(d)
-    data['contents'] = object_contents_list
-
-    # Collecting DrsObject > AccessMethods
-    query = access_methods.select(access_methods.c.object_id == object_id)
-    object_access_methods = await database.fetch_all(query)
-    object_access_method_list = []
-    for am in object_access_methods:
-        object_access_method_list.append({
-            'type': am['type'],
-            'access_url': {
-                'url': am['access_url'],
-                'headers': am['headers']
-            },
-            'access_id': am['access_id'],
-            'region': am['region']
-        })
-    data['access_methods'] = object_access_method_list
+    data = await objects.get_objects(object_id=object_id,client_host=client_host)
 
     return data
 

@@ -1,5 +1,6 @@
-from fastapi.openapi.utils import get_openapi
 from app.core.config import API_V1_STR
+from fastapi.openapi.utils import get_openapi
+
 
 def custom_openapi(app):
     if app.openapi_schema:

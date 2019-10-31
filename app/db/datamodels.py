@@ -1,5 +1,5 @@
-import sqlalchemy
 from app.core.config import DATABASE_URL_STR
+import sqlalchemy
 
 engine = sqlalchemy.create_engine(
     DATABASE_URL_STR

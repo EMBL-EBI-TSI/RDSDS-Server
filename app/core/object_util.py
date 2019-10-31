@@ -1,10 +1,12 @@
 import os
+
 from app.db.database import db as database
 import app.models.objects.contents
 
+
 async def collect_sub_objects(client_host, object_id):
-    #global client_host
-    #global client_port
+    # global client_host
+    # global client_port
     sub_objects_list = []
     query = contents.select(contents.c.object_id == object_id)
     sub_objects = await database.fetch_all(query)

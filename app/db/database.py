@@ -1,7 +1,9 @@
 from databases import Database
 
+
 class DataBase:
     database: Database = None
+
 
 db = DataBase()
 

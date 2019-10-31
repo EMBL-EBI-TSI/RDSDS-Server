@@ -1,7 +1,9 @@
-from pydantic import BaseModel
+from datetime import datetime
 from enum import Enum
 from typing import Dict, List
-from datetime import datetime
+
+from pydantic import BaseModel
+
 
 class Checksum(BaseModel):
     type: str
@@ -12,7 +14,7 @@ class AccessMethodEnum(str, Enum):
     s3 = 's3'
     gs = 'gs'
     ftp = 'ftp'
-    #TODO: Update spec for sftp support
+    # TODO: Update spec for sftp support
     sftp = 'sftp'
     gsiftp = 'gsiftp'
     globus = 'globus'
@@ -35,12 +37,13 @@ class AccessMethod(BaseModel):
 
 class ContentsObject(BaseModel):
     name: str
-    #TODO: Fix id has to be required in spec
+    # TODO: Fix id has to be required in spec
     id: str
     # TODO: Add type field in spec
     # type: str
     drs_uri: str = None
     contents: List['ContentsObject'] = None
+
 
 class DrsObject(BaseModel):
     id: str
@@ -56,6 +59,7 @@ class DrsObject(BaseModel):
     contents: List[ContentsObject] = []
     description: str = None
     aliases: List[str] = None
+
 
 class Error(BaseModel):
     msg: str
