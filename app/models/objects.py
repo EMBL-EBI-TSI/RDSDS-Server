@@ -14,7 +14,7 @@ class AccessMethodEnum(str, Enum):
     s3 = 's3'
     gs = 'gs'
     ftp = 'ftp'
-    # TODO: Update spec for sftp support
+    #TODO: Update spec for sftp support
     sftp = 'sftp'
     gsiftp = 'gsiftp'
     globus = 'globus'
@@ -37,12 +37,15 @@ class AccessMethod(BaseModel):
 
 class ContentsObject(BaseModel):
     name: str
-    # TODO: Fix id has to be required in spec
+    #TODO: Fix id has to be required in spec
     id: str
     # TODO: Add type field in spec
     # type: str
     drs_uri: str = None
-    contents: List['ContentsObject'] = None
+    #contents: List['ContentsObject'] = None
+
+
+ContentsObject.update_forward_refs()
 
 
 class DrsObject(BaseModel):
@@ -60,7 +63,7 @@ class DrsObject(BaseModel):
     description: str = None
     aliases: List[str] = None
 
-
 class Error(BaseModel):
     msg: str
     status_code: int = 500
+
