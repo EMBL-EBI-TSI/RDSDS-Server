@@ -9,7 +9,7 @@ from app.db.database import db as database
 
 
 
-async def get_objects(object_id: str, client_host: str, expand: bool = False, database: DataBase = Depends(get_database)):
+async def get_objects(object_id: str, client_host: str, expand: bool = False, database: DataBase):
     """Returns dbObject metadata, and a list of access methods that can be used to
      fetch dbObject bytes."""
     # Collecting DrsObject

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.models.objects import DrsObject, Error, AccessURL
 from app.business import objects
 from starlette.requests import Request
+from app.db.database import DataBase, get_database
 
 router = APIRouter()
 
@@ -21,13 +22,13 @@ router = APIRouter()
         500: {'model': Error, 'description': "An unexpected error occurred."}
     }
 )
-async def get_object(object_id: str, request: Request):
+async def get_object(object_id: str, request: Request, database: DataBase = Depends(get_database)):
     """Returns object metadata, and a list of access methods that can be used to
      fetch object bytes."""
     client_host = request.headers['host']
 
     # Collecting DrsObject
-    data = await objects.get_objects(object_id=object_id,client_host=client_host)
+    data = await objects.get_objects(object_id=object_id, client_host=client_host, database=database)
 
     return data
 
