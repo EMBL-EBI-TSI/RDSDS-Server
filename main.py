@@ -27,7 +27,7 @@ def custom_openapi():
         title="Reference Data Set Distribution Service",
         description="Provides a GA4GH DRS compatible interface datasets stored within the ELIXIR network",
         version="2.0.0",
-        routes=self.routes,
+        routes=self.routes
     )
     openapi_schema['basePath'] = API_V1_STR
     self.openapi_schema = openapi_schema
