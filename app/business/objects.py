@@ -1,5 +1,4 @@
 import logging
-import app.models.objects.contents
 import os
 
 from app.db.database import DataBase, get_database
