@@ -42,7 +42,7 @@ class ContentsObject(BaseModel):
     # TODO: Add type field in spec
     # type: str
     drs_uri: str = None
-    #contents: List['ContentsObject'] = None
+    contents: List['ContentsObject'] = None
 
 
 ContentsObject.update_forward_refs()
