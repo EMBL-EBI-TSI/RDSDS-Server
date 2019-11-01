@@ -6,8 +6,7 @@ router = APIRouter()
 @router.get(
     "/health-check",
     summary="Health Check",
-    # TODO: Add additional responses 202, 400, 401, 403, 500
-    # https://fastapi.tiangolo.com/tutorial/additional-responses/
+    tags=["Health Check"],
 )
 async def healthCheck():
     return JSONResponse(status_code=200, content={

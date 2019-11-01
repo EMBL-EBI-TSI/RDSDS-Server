@@ -1,21 +1,18 @@
 import logging
 import os
 
-from app.db.database import DataBase, get_database
 from app.db.datamodels import objects, checksums, access_methods, contents
 from fastapi import Depends
 from starlette.responses import JSONResponse
-from app.db.database import db as database
+from app.crud.objects import get_db_objects, get_checksum, get_contents, get_object_access_methods, get_sub_objects
 
 
 
-async def get_objects(object_id: str, client_host: str, database: DataBase, expand: bool = False):
+async def get_objects(object_id: str, client_host: str, expand: bool = False):
     """Returns dbObject metadata, and a list of access methods that can be used to
      fetch dbObject bytes."""
     # Collecting DrsObject
-    query = objects.select(objects.c.id == object_id)
-    dbObject = await database.fetch_one(query)
-    logging.info(dbObject)
+    dbObject = await get_db_objects(object_id)
     if not dbObject:
         return JSONResponse(status_code=404, content={
             "status_code": 404,
@@ -27,13 +24,11 @@ async def get_objects(object_id: str, client_host: str, database: DataBase, expa
     data['self_uri'] = "drs://{}/{}".format(client_host, data['id'])
 
     # Collecting DrsObject > Checksums
-    query = checksums.select(checksums.c.object_id == object_id)
-    object_checksums = await database.fetch_all(query)
+    object_checksums = await get_checksum(object_id)
     data['checksums'] = object_checksums
 
     # Collecting DrsObject > ContentObjects
-    query = contents.select(contents.c.object_id == object_id)
-    object_contents = await database.fetch_all(query)
+    object_contents = await get_contents(object_id)
     object_contents_list = []
     for oc in object_contents:
         d = {
@@ -49,8 +44,8 @@ async def get_objects(object_id: str, client_host: str, database: DataBase, expa
     data['contents'] = object_contents_list
 
     # Collecting DrsObject > AccessMethods
-    query = access_methods.select(access_methods.c.object_id == object_id)
-    object_access_methods = await database.fetch_all(query)
+    
+    object_access_methods = await get_object_access_methods(object_id)
     object_access_method_list = []
     for am in object_access_methods:
         object_access_method_list.append({
@@ -71,8 +66,7 @@ async def collect_sub_objects(client_host, object_id):
     # global client_host
     # global client_port
     sub_objects_list = []
-    query = contents.select(contents.c.object_id == object_id)
-    sub_objects = await database.fetch_all(query)
+    sub_objects = await get_sub_objects(object_id)
     if len(sub_objects):
         for sub_obj in sub_objects:
             so = dict(sub_obj)
