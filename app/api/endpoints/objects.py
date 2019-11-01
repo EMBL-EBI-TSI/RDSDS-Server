@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 from app.models.objects import DrsObject, Error, AccessURL
 from app.business import objects
 from starlette.requests import Request
