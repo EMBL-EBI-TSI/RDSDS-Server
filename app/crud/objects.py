@@ -1,8 +1,8 @@
 from fastapi import Depends
-from app.db.database import DataBase, get_database
+from app.db.database import get_database
 from app.db.datamodels import objects, checksums, access_methods, contents
 
-database = Depends(get_database)
+database = await get_database()
 
 async def get_db_objects(object_id: str):
     query = objects.select(objects.c.id == object_id)
