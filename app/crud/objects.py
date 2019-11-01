@@ -5,7 +5,7 @@ from app.db.datamodels import objects, checksums, access_methods, contents
 async def get_db_objects(object_id: str):
     database = await get_database()
     query = objects.select(objects.c.id == object_id)
-    return  database.fetch_one(query)
+    return await database.fetch_one(query)
 
 
 async def get_checksum(object_id: str):
