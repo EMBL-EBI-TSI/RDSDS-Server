@@ -1,7 +1,6 @@
 import logging
 import os
 
-from app.db.datamodels import objects, checksums, access_methods, contents
 from starlette.responses import JSONResponse
 from app.crud.objects import get_db_objects, get_checksum, get_contents, get_object_access_methods, get_sub_objects
 
