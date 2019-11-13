@@ -71,7 +71,8 @@ CREATE TABLE public.contents (
     object_id character varying,
     id character varying,
     name character varying,
-    drs_uri character varying
+    drs_uri character varying,
+    type character varying
 );
 
 

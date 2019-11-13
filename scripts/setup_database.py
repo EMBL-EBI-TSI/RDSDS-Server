@@ -5,7 +5,6 @@ import os
 import sys
 
 import dateutil.parser
-
 from main import access_methods, checksums, contents, database, objects
 
 csv.field_size_limit(sys.maxsize)
