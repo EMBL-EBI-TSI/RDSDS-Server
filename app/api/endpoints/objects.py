@@ -12,6 +12,7 @@ router = APIRouter()
     response_model_skip_defaults=True,
     summary="Get info about a `DrsObject`.",
     tags=["DataRepositoryService"],
+    name="get_object",
     responses={
         201: {'model': Error, 'description': "The operation is delayed and will continue asynchronously. The client should retry this same request after the delay specified by Retry-After header."},
         400: {'model': Error, 'description': "The request is malformed."},

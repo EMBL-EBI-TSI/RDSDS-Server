@@ -28,3 +28,7 @@ API_V1_STR = "/ga4gh/drs/v1"
 HOST = os.getenv("HOST", "0.0.0.0")
 PORT = int(os.getenv("PORT", 5000))
 
+
+APP_CLIENT_ID = os.getenv("APP_CLIENT_ID", "")
+APP_CLIENT_SECRET = os.getenv("APP_CLIENT_SECRET", "")
+SESSION_SECRET_KEY = os.getenv("SESSION_SECRET_KEY", "763384$%^21&*#4567")
