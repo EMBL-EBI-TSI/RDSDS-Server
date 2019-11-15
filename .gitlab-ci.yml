@@ -60,6 +60,7 @@ variables:
 
 
 stages:
+  - pre-build-test
   - build
   - test
   - review
@@ -79,14 +80,17 @@ stages:
 include:
   - template: Jobs/Build.gitlab-ci.yml
   #- template: Jobs/Test.gitlab-ci.yml
-  #- template: Jobs/Code-Quality.gitlab-ci.yml
+  - template: Jobs/Code-Quality.gitlab-ci.yml
   - template: Jobs/Deploy.gitlab-ci.yml
   #- template: Jobs/Browser-Performance-Testing.gitlab-ci.yml
   - template: Security/DAST.gitlab-ci.yml
   - template: Security/Container-Scanning.gitlab-ci.yml
   #- template: Security/Dependency-Scanning.gitlab-ci.yml
-  - template: Security/License-Management.gitlab-ci.yml
+  #- template: Security/License-Management.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
+
+
+
 
 test-server:
   stage: performance
@@ -105,10 +109,28 @@ test-server:
     paths: [environment_url.txt]
   
   
-
+test-code:
+  stage: pre-build-test
+  image: dockerhub.ebi.ac.uk/tsi/base-images/dsds_server_base:v1.0.0
+  script:
+  #setup database for testing
+  - yum install -y postgresql96-server
+  - su postgres -c 'PGDATA=/var/lib/pgsql/9.6/data /usr/pgsql-9.6/bin/pg_ctl initdb'
+  - su postgres -c '/usr/pgsql-9.6/bin/pg_ctl -D /var/lib/pgsql/9.6/data -l logfile start'
+  - sleep 10
+  - psql -U postgres -c "CREATE USER tester WITH PASSWORD 'test_password'"
+  - psql -U postgres -c "CREATE DATABASE dsds"
+  - psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE dsds to tester"
+  - export DATABASE_URL="postgres://tester:test_password@localhost:5432/dsds"
+  - sh scripts/initDB.sh
+  - export APP_CLIENT_ID=${K8S_SECRET_APP_CLIENT_ID}
+  - export APP_CLIENT_SECRET=${K8S_SECRET_APP_CLIENT_SECRET}
+  - pip install --no-cache-dir -r requirements.txt
+  - pip install pytest pytest-asyncio pytest-trio pytest-tornasync
+  - pytest
   
 # Override DAST job to exclude master branch
-dast:
+.dast:
   except:
     refs:
       - master
