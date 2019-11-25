@@ -3,7 +3,7 @@ from globus_sdk import ConfidentialAppAuthClient,ClientCredentialsAuthorizer,Tra
 from starlette.testclient import TestClient
 from main import app
 from app.core.config import APP_CLIENT_ID, APP_CLIENT_SECRET
-from app.business.transfer import create_transfer_globus, get_transfer_globus
+from app.business.transfer import create_transfer_globus, get_transfer_globus, get_transfer_globus_list
 from app.models.transfer import TransferBase
 
 #api_client = TestClient(app)
@@ -46,3 +46,9 @@ async def test_get_transfer_globus():
     logging.info(transfer_response)
     assert transfer_response['status'] == 200
 
+async def test_get_transfer_list_globus():
+    transfer_response = await get_transfer_globus_list(transfer_client, 10)
+    logging.info(transfer_response)
+    if 'globus_response' in transfer_response:
+        assert True
+    assert transfer_response['status'] == 200
