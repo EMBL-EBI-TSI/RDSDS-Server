@@ -73,10 +73,9 @@ async def create_transfer_globus(transferObject: TransferBase, transfer_client: 
             tdata.add_item(source, target)
             
         transfer_result = transfer_client.submit_transfer(tdata)
-        transfer_result_json = json.loads(str(transfer_result))
         
         
-        transfer_response = {'globus_response': transfer_result_json}
+        transfer_response = {'globus_response': transfer_result}
         transfer_response['status'] = 200
         rdsds_tracking_id = 'globus-' + transfer_result["task_id"]
         transfer_response['rdsds_tracking_id'] = rdsds_tracking_id
@@ -105,10 +104,48 @@ async def get_transfer_globus(globus_transfer_id: str, transfer_client: Transfer
     try:
             
         transfer_result = transfer_client.get_task(globus_transfer_id)
-        transfer_result_json = json.loads(str(transfer_result))
-        transfer_response = {'globus_response': transfer_result_json}
+        transfer_response = {'globus_response': transfer_result}
         transfer_response['status'] = 200
         
+        return transfer_response
+    
+    except GlobusAPIError as e:
+        # Error response from the REST service, check the code and message for
+        # details.
+        # Error response from the REST service, check the code and message for
+        # details.        
+        return handle_globus_api_error(e)
+        
+        return transfer_response
+    except NetworkError:
+        logging.error(("Network Failure. "
+                       "Possibly a firewall or connectivity issue"))
+        raise
+    except GlobusError:
+        logging.exception("Totally unexpected GlobusError!")
+        raise
+
+
+
+async def get_transfer_globus_list(transfer_client: TransferClient, globus_item_count: int):
+    """This function gets list of globus transfers for an user"""
+    #transfer_client = await get_transfer_client(request)
+    transfer_response = None
+    
+    try:
+        transfer_result_dict= []    
+        transfer_result = transfer_client.task_list(num_results=globus_item_count)
+        #logging.info(transfer_result)
+        for task in transfer_result:
+            this_task_details = {'task_id':  task["task_id"]}
+            this_task_details['source_endpoint'] = task["source_endpoint"]
+            this_task_details['destination_endpoint'] = task["destination_endpoint"]
+            transfer_result_dict.append(this_task_details)
+        
+        logging.info(transfer_result_dict)
+        #transfer_result_json = json.loads(str(transfer_result_dict))
+        transfer_response = {'globus_response': transfer_result_dict}
+        #logging.info(transfer_response)
         return transfer_response
     
     except GlobusAPIError as e:
@@ -135,8 +172,7 @@ async def delete_transfer_globus(globus_transfer_id: str, transfer_client: Trans
     
     try:
         transfer_result = transfer_client.cancel_task(globus_transfer_id)
-        transfer_result_json = json.loads(str(transfer_result))
-        transfer_response = {'globus_response': transfer_result_json}
+        transfer_response = {'globus_response': transfer_result}
         transfer_response['status'] = 200
         
         return transfer_response

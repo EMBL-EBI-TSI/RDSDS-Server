@@ -113,7 +113,7 @@ test-code:
   stage: pre-build-test
   image: dockerhub.ebi.ac.uk/tsi/base-images/dsds_server_base:v1.0.0
   script:
-  #setup database for testing
+  # setup database for testing
   - yum install -y postgresql96-server
   - su postgres -c 'PGDATA=/var/lib/pgsql/9.6/data /usr/pgsql-9.6/bin/pg_ctl initdb'
   - su postgres -c '/usr/pgsql-9.6/bin/pg_ctl -D /var/lib/pgsql/9.6/data -l logfile start'
@@ -122,11 +122,19 @@ test-code:
   - psql -U postgres -c "CREATE DATABASE dsds"
   - psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE dsds to tester"
   - export DATABASE_URL="postgres://tester:test_password@localhost:5432/dsds"
+  
+  # Seeding Data
   - sh scripts/initDB.sh
+  
+  # exporting variable for application
   - export APP_CLIENT_ID=${K8S_SECRET_APP_CLIENT_ID}
   - export APP_CLIENT_SECRET=${K8S_SECRET_APP_CLIENT_SECRET}
+  
+  # Installing dependencies
   - pip install --no-cache-dir -r requirements.txt
   - pip install pytest pytest-asyncio pytest-trio pytest-tornasync
+  
+  # Running test cases
   - pytest
   
 # Override DAST job to exclude master branch

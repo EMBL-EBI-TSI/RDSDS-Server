@@ -1,12 +1,11 @@
-import logging
 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder
 from starlette.requests import Request
-from starlette.responses import RedirectResponse, JSONResponse
+from starlette.responses import JSONResponse
 from app.models.transfer import TransferBase, TransferType, TransferResponse
 from app.models.objects import Error
-from app.business.transfer import verify_globus_code, create_transfer_globus, get_transfer_globus, delete_transfer_globus, get_transfer_client
+from app.business.transfer import verify_globus_code, create_transfer_globus, get_transfer_globus, delete_transfer_globus, get_transfer_client, get_transfer_globus_list
 
 router = APIRouter()
 
@@ -38,6 +37,36 @@ async def create_transfer(transferBase: TransferBase,  request: Request):
         
     # TODO Other type of transfers
 
+
+@router.get(
+    "/",
+    summary="Get list for transfers for RDSDS",
+    name='get_transfer_list',
+    tags=["TransferService"],
+    responses={
+        403: {'model': Error, 'description': "The requester is not authorized to perform this action, Please login through /globus/login"},
+        500: {'model': Error, 'description': "An unexpected error occurred."}
+    }
+)        
+async def get_transfer_list(request: Request):
+    transfer_status_list = []
+    
+    # Code for globus
+    tokens = await verify_globus_code(request)
+    if tokens:
+        globus_item_count = 10
+        if 'globus_item_count' in request.query_params:
+            globus_item_count = request.path_params['globus_item_count']
+        transfer_client = await get_transfer_client(request)
+        transfer_response = await get_transfer_globus_list(transfer_client, globus_item_count)
+        transfer_status_list.append(transfer_response)
+    else:
+        error_response = {'globus' : 'No authorization available'}
+        transfer_status_list.append(error_response)
+    # TODO Other type of transfers
+    
+    transfer_status_json = jsonable_encoder(transfer_status_list)
+    return JSONResponse(content=transfer_status_json, status_code=200)
 
 
 @router.get(
