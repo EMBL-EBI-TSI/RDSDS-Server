@@ -51,4 +51,5 @@ async def test_get_transfer_list_globus():
     logging.info(transfer_response)
     if 'globus_response' in transfer_response:
         assert True
-    assert transfer_response['status'] == 200
+    else:
+        assert False
