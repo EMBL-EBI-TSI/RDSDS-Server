@@ -6,7 +6,12 @@ from app.business.globus import login
 
 router = APIRouter()
 
-@router.get('/login', name='globus_login')
+@router.get(
+    '/login', 
+     name='globus_login',
+     summary="Login for Globus Service",
+     tags=["GlobusLogin"]
+)
 async def globus_login(request: Request):
     """
     Login via Globus Auth.
