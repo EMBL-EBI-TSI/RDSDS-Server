@@ -2,13 +2,13 @@ import logging
 from globus_sdk import ConfidentialAppAuthClient,ClientCredentialsAuthorizer,TransferClient
 from starlette.testclient import TestClient
 from main import app
-from app.core.config import APP_CLIENT_ID, APP_CLIENT_SECRET
+from app.core.config import GLOBUS_CLIENT_ID, GLOBUS_CLIENT_SECRET
 from app.business.globus import create_transfer_globus, get_transfer_globus, get_transfer_globus_list
 from app.models.transfer import TransferBase
 
 #api_client = TestClient(app)
 def get_client_credential_transfer_client():
-    client =  ConfidentialAppAuthClient(APP_CLIENT_ID, APP_CLIENT_SECRET)
+    client =  ConfidentialAppAuthClient(GLOBUS_CLIENT_ID, GLOBUS_CLIENT_SECRET)
     scopes = "urn:globus:auth:scope:transfer.api.globus.org:all"
     cc_authorizer = ClientCredentialsAuthorizer(client, scopes)
     transfer_client = TransferClient(authorizer=cc_authorizer)
