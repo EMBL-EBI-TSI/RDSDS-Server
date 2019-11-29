@@ -4,7 +4,7 @@ import logging
 from app.core.config import ELIXIR_CLIENT_ID, ELIXIR_CLIENT_SECRET, ELIXIR_METADATA_URL
 from app.business.oauth import auth, login, logout
 from fastapi import APIRouter
-from starlette.responses import HTMLResponse, RedirectResponse
+from starlette.responses import HTMLResponse
 from starlette.requests import Request
 
 router = APIRouter()
@@ -57,5 +57,5 @@ async def auth_api(request: Request):
      tags=["OAuth"]
 )
 async def logout_api(request: Request):
-    return await logout(request)
+    return await logout(request) 
 
