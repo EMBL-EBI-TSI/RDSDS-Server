@@ -4,6 +4,7 @@ from app.api.endpoints.healthcheck import router as healthcheck_router
 from app.api.endpoints.objects import router as api_router
 from app.api.endpoints.transfer import router as transfer_router
 from app.api.endpoints.globus import router as globus_router
+from app.api.endpoints.oauth import router as oauth_router
 from app.core.config import API_V1_STR, PROJECT_NAME, HOST, PORT, SESSION_SECRET_KEY
 from app.core.exception import http_exception_handler
 from app.business.globus_client import load_app_client
@@ -45,6 +46,8 @@ app.include_router(healthcheck_router, prefix='/health-check')
 app.include_router(transfer_router, prefix='/transfer')
 
 app.include_router(globus_router, prefix='/globus')
+
+app.include_router(oauth_router, prefix='/oauth')
 
 
 app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET_KEY)
