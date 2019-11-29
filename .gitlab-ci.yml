@@ -132,10 +132,10 @@ test-code:
   
   # Installing dependencies
   - pip install --no-cache-dir -r requirements.txt
-  - pip install pytest pytest-asyncio pytest-trio pytest-tornasync
+  - pip install pytest pytest-asyncio pytest-trio pytest-tornasync pytest-cov
   
   # Running test cases
-  - pytest
+  - pytest --cov app/
   
 # Override DAST job to exclude master branch
 .dast:
