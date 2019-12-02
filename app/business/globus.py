@@ -1,5 +1,7 @@
-from globus_sdk import (TransferClient, GlobusError, GlobusAPIError, NetworkError, TransferData, AccessTokenAuthorizer)
 import logging
+import json
+
+from globus_sdk import (TransferClient, GlobusError, GlobusAPIError, NetworkError, TransferData, AccessTokenAuthorizer)
 from starlette.requests import Request
 from starlette.responses import RedirectResponse, JSONResponse
 from app.business.globus_client import globus
@@ -131,8 +133,8 @@ async def create_transfer_globus(transferObject: TransferBase, transfer_client: 
             
         transfer_result = transfer_client.submit_transfer(tdata)
         
-        
-        transfer_response = {'globus_response': transfer_result}
+        transfer_result_json = json.loads(str(transfer_result))
+        transfer_response = {'globus_response': transfer_result_json}
         transfer_response['status'] = 200
         rdsds_tracking_id = 'globus-' + transfer_result["task_id"]
         transfer_response['rdsds_tracking_id'] = rdsds_tracking_id
@@ -161,7 +163,8 @@ async def get_transfer_globus(globus_transfer_id: str, transfer_client: Transfer
     try:
             
         transfer_result = transfer_client.get_task(globus_transfer_id)
-        transfer_response = {'globus_response': transfer_result}
+        transfer_result_json = json.loads(str(transfer_result))
+        transfer_response = {'globus_response': transfer_result_json}
         transfer_response['status'] = 200
         
         return transfer_response
