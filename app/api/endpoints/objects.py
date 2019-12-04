@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from app.models.objects import DrsObject, Error, AccessURL
 from app.business import objects
 from app.business.oauth import auth_request
@@ -24,15 +24,21 @@ router = APIRouter()
         500: {'model': Error, 'description': "An unexpected error occurred."}
     }
 )
-async def get_object(object_id: str, request: Request):
+async def get_object(object_id: str, request: Request, auth: dict = Depends(auth_request)):
     """Returns object metadata, and a list of access methods that can be used to
      fetch object bytes."""
-    client_host = request.headers['host']
-
-    # Collecting DrsObject
-    data = await objects.get_objects(object_id=object_id, client_host=client_host)
-
-    return data
+    if auth:
+        client_host = request.headers['host']
+    
+        # Collecting DrsObject
+        data = await objects.get_objects(object_id=object_id, client_host=client_host)
+    
+        return data
+    else:
+        return JSONResponse(status_code=403, content={
+            "status_code": 403,
+            "msg": "The requester is not authorized to perform this action, Please login through /oauth/login"
+        })
 
 
 @router.get(
