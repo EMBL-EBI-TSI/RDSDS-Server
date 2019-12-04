@@ -1,8 +1,9 @@
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from app.models.transfer import TransferBase, TransferType, TransferResponse
+from app.business.oauth import auth_request
 from app.models.objects import Error
 from app.business import transfer
 
@@ -20,8 +21,14 @@ router = APIRouter()
         500: {'model': Error, 'description': "An unexpected error occurred."}
     }
 )
-async def create_transfer(transferBase: TransferBase,  request: Request):
-    return await transfer.create_transfer(transferBase,  request)
+async def create_transfer(transferBase: TransferBase,  request: Request, auth: bool = Depends(auth_request)):
+    if auth:
+        return await transfer.create_transfer(transferBase,  request)
+    else:
+        return JSONResponse(status_code=403, content={
+            "status_code": 403,
+            "msg": "The requester is not authorized to perform this action, Please login through /oauth/login"
+        })
 
 
 @router.get(

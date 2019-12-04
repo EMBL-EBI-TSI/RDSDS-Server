@@ -6,7 +6,7 @@ from app.crud.objects import get_db_objects, get_checksum, get_contents, get_obj
 
 
 
-async def get_objects(object_id: str, client_host: str, expand: bool = False):
+async def get_objects(object_id: str, client_host: str, expand: bool = False ):
     """Returns dbObject metadata, and a list of access methods that can be used to
      fetch dbObject bytes."""
     # Collecting DrsObject

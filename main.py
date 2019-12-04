@@ -8,6 +8,7 @@ from app.api.endpoints.oauth import router as oauth_router
 from app.core.config import API_V1_STR, PROJECT_NAME, HOST, PORT, SESSION_SECRET_KEY
 from app.core.exception import http_exception_handler
 from app.business.globus_client import load_app_client
+from app.business.oauth_client import load_oauth_client
 #from core.openapi import custom_openapi#
 from app.db.db_utils import close_postgres_connection, connect_to_postgres
 from fastapi import FastAPI
@@ -19,6 +20,7 @@ app = FastAPI(title=PROJECT_NAME)
 
 app.add_event_handler("startup", connect_to_postgres)
 app.add_event_handler("startup", load_app_client)
+app.add_event_handler("startup", load_oauth_client)
 
 app.add_event_handler("shutdown", close_postgres_connection)
 

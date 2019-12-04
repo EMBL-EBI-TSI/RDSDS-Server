@@ -5,7 +5,7 @@ from starlette.responses import JSONResponse
 from app.models.transfer import TransferBase, TransferType, TransferResponse
 from app.models.objects import Error
 from app.business import globus
-
+from app.crud.objects import get_object_access_methods
 
 
 async def create_transfer(transferBase: TransferBase,  request: Request):
@@ -20,6 +20,13 @@ async def create_transfer(transferBase: TransferBase,  request: Request):
         })
         else:
             transfer_client = await globus.get_transfer_client(request)
+            if not transferBase.source:
+                if transferBase.object_id:
+                    object_access_methods = await get_object_access_methods(transferBase.object_id)
+                    for am in object_access_methods:
+                        if (am['type'] == TransferType.GLOBUS):
+                            source = am['access_url']
+                            transferBase
             return await globus.create_transfer_globus(transferBase, transfer_client)
         
 
