@@ -5,7 +5,7 @@ from starlette.responses import JSONResponse
 from app.models.transfer import TransferBase, TransferType, TransferResponse
 from app.models.objects import Error
 from app.business import globus
-from app.crud.objects import get_object_access_methods
+from app.crud.objects import get_object_access_methods, get_contents
 
 
 async def create_transfer(transferBase: TransferBase,  request: Request):
@@ -15,20 +15,32 @@ async def create_transfer(transferBase: TransferBase,  request: Request):
         tokens = await globus.verify_globus_code(request)
         if not tokens:
             return JSONResponse(status_code=403, content={
-            "status_code": 403,
-            "msg": "The requester is not authorized to perform this action, Please login through /globus/login"
-        })
+                "status_code": 403,
+                "msg": "The requester is not authorized to perform this action, Please login through /globus/login"
+            })
         else:
             transfer_client = await globus.get_transfer_client(request)
             if not transferBase.source:
                 if transferBase.object_id:
-                    object_access_methods = await get_object_access_methods(transferBase.object_id)
-                    for am in object_access_methods:
-                        if (am['type'] == TransferType.GLOBUS):
-                            source = am['access_url']
-                            transferBase
-            return await globus.create_transfer_globus(transferBase, transfer_client)
-        
+                    transferBase = await get_globus_source_from_object(transferBase)
+                    isFolder = await check_if_bundle(transferBase.object_id)
+            return await globus.create_transfer_globus(transferBase, transfer_client, isFolder)
+
+async def check_if_bundle(object_id: str):
+    object_contents = await get_contents(object_id)
+    if len(object_contents) == 0 :
+        return False
+    else:
+        return True
+
+async def get_globus_source_from_object(transferBase: TransferBase):
+    object_access_methods = await get_object_access_methods(transferBase.object_id)
+    for am in object_access_methods:
+        if (am['type'] == TransferType.GLOBUS):
+            #source_endpoint = source.split(':')[1].replace('/','')
+            #source_path = source.split(':')[2]
+            transferBase.source = am['access_url']
+    return transferBase
 
 async def get_transfer_list(request: Request):
     transfer_status_list = []

@@ -21,14 +21,8 @@ router = APIRouter()
         500: {'model': Error, 'description': "An unexpected error occurred."}
     }
 )
-async def create_transfer(transferBase: TransferBase,  request: Request, auth: bool = Depends(auth_request)):
-    if auth:
-        return await transfer.create_transfer(transferBase,  request)
-    else:
-        return JSONResponse(status_code=403, content={
-            "status_code": 403,
-            "msg": "The requester is not authorized to perform this action, Please login through /oauth/login"
-        })
+async def create_transfer(transferBase: TransferBase,  request: Request):
+    return await transfer.create_transfer(transferBase,  request)
 
 
 @router.get(

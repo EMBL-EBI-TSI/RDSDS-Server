@@ -16,8 +16,8 @@ class TransferType(str, Enum):
     
 
 class TransferBase(BaseModel):
-    object_id: str
-    source: str
+    object_id: str = None
+    source: str = None
     target: str
     transfer_type: TransferType
     options: Dict[str, str] = None
