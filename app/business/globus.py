@@ -99,37 +99,54 @@ def handle_globus_api_error(e:GlobusAPIError):
 
 
 
-async def create_transfer_globus(transferObject: TransferBase, transfer_client: TransferClient ):
+async def create_transfer_globus(transferObject: TransferBase, transfer_client: TransferClient , isFolder: bool = False):
     """This function verifies if globus authentication is present in session"""
     #transfer_client = await get_transfer_client(request)
-    logging.info(transferObject.options)
-    source_endpoint_id = transferObject.options['source_endpoint']
-    destination_endpoint_id = transferObject.options['destination_endpoint']
     source = transferObject.source
     target = transferObject.target
+    source_name = ''
+    source_path = ''
+    # example source: globus://fd9c190c-b824-11e9-98d7-0a63aa6b37da:/gridftp/pub/databases/eva/PRJEB6057/MOCH.population_sites.CHIR1_0.20140307_EVA_ss_IDs.fixed.vcf.gz
+    if source:
+        source_endpoint_id = source.split(':')[1].replace('/','')
+        source_path = source.split(':')[2]
+        source_path_array = source_path.split('/')
+        source_name = source_path_array[len(source_path_array)-1]
+    
+    if target:
+        target_endpoint_id = target.split(':')[1].replace('/','')
+        target_path = target.split(':')[2]
+    
+    if target_path.endswith('/'):
+        if source_name:
+            target_path = target_path + source_name
     
     transfer_response = None
     
-    isFolder = False
     
-    if 'recursive' in transferObject.options:
-        if transferObject.options['recursive'] == "True":
-            isFolder = True
+    # source path ends with '/'
+    if source_name == '':
+        isFolder = True
+    
+    if transferObject.options:
+        if 'recursive' in transferObject.options:
+            if transferObject.options['recursive'] == "True":
+                isFolder = True
     
     time = datetime.now().strftime("%d-%m-%Y %H-%M-%S")
     
     try:
             
         tdata = TransferData(transfer_client, source_endpoint_id,
-                                        destination_endpoint_id,
+                                        target_endpoint_id,
                                         label= 'RDSDS ' + time,
                                         sync_level="checksum")
         
         
         if isFolder:
-            tdata.add_item(source, target, recursive=True)
+            tdata.add_item(source_path, target_path, recursive=True)
         else:
-            tdata.add_item(source, target)
+            tdata.add_item(source_path, target_path)
             
         transfer_result = transfer_client.submit_transfer(tdata)
         
