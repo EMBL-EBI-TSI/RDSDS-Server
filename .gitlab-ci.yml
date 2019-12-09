@@ -90,12 +90,6 @@ include:
   - template: Security/SAST.gitlab-ci.yml
 
 
-data-migration:
-  stage: data-migration
-  image: dockerhub.ebi.ac.uk/tsi/base-images/dsds_server_base:v1.0.0
-  script:
-  - 
-
 test-server:
   stage: performance
   image: debian
