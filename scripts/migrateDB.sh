@@ -1,3 +1,5 @@
+#!/bin/bash
+
 pip install awscli
 export S3_HOST='https://s3.embassy.ebi.ac.uk'
 export S3_PATH='s3://rdsds-backups/dsds-migration-files/master/'
