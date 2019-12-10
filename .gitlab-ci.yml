@@ -80,17 +80,17 @@ stages:
 include:
   - template: Jobs/Build.gitlab-ci.yml
   #- template: Jobs/Test.gitlab-ci.yml
-  - template: Jobs/Code-Quality.gitlab-ci.yml
+  ##- template: Jobs/Code-Quality.gitlab-ci.yml
   - template: Jobs/Deploy.gitlab-ci.yml
   #- template: Jobs/Browser-Performance-Testing.gitlab-ci.yml
-  - template: Security/DAST.gitlab-ci.yml
-  - template: Security/Container-Scanning.gitlab-ci.yml
+  ##- template: Security/DAST.gitlab-ci.yml
+  ##- template: Security/Container-Scanning.gitlab-ci.yml
   #- template: Security/Dependency-Scanning.gitlab-ci.yml
   #- template: Security/License-Management.gitlab-ci.yml
-  - template: Security/SAST.gitlab-ci.yml
+  ##- template: Security/SAST.gitlab-ci.yml
 
 
-test-server:
+.test-server:
   stage: performance
   image: debian
   script:
@@ -107,7 +107,7 @@ test-server:
     paths: [environment_url.txt]
   
   
-test-code:
+.test-code:
   stage: pre-build-test
   image: dockerhub.ebi.ac.uk/tsi/base-images/dsds_server_base:v1.0.0
   script:
