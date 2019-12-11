@@ -118,8 +118,6 @@ test-server:
     paths: [environment_url.txt]
   except:
   - triggers
-  - refs:
-      - master
   
   
 test-code:
