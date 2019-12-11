@@ -79,17 +79,26 @@ stages:
 
 include:
   - template: Jobs/Build.gitlab-ci.yml
+    except:
+    - triggers
   #- template: Jobs/Test.gitlab-ci.yml
   - template: Jobs/Code-Quality.gitlab-ci.yml
+    except:
+    - triggers
   - template: Jobs/Deploy.gitlab-ci.yml
   #- template: Jobs/Browser-Performance-Testing.gitlab-ci.yml
   - template: Security/DAST.gitlab-ci.yml
+    except:
+    - triggers
   - template: Security/Container-Scanning.gitlab-ci.yml
+    except:
+    - triggers
   #- template: Security/Dependency-Scanning.gitlab-ci.yml
   #- template: Security/License-Management.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
-
-
+    except:
+    - triggers
+  
 
 
 test-server:
@@ -107,11 +116,15 @@ test-server:
   - ab -n 100000 -c 250 ${CI_ENVIRONMENT_URL}/${TEST_PATH_2}
   artifacts:
     paths: [environment_url.txt]
+  except:
+  - triggers
   
   
 test-code:
   stage: pre-build-test
   image: dockerhub.ebi.ac.uk/tsi/base-images/dsds_server_base:v1.0.0
+  except:
+  - triggers
   script:
   # setup database for testing
   - yum install -y postgresql96-server
@@ -136,6 +149,7 @@ test-code:
   
   # Running test cases
   - pytest --cov app/
+  
   
 # Override DAST job to exclude master branch
 .dast:
