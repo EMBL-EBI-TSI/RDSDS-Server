@@ -1,8 +1,9 @@
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from app.models.transfer import TransferBase, TransferType, TransferResponse
+from app.business.oauth import auth_request
 from app.models.objects import Error
 from app.business import transfer
 
