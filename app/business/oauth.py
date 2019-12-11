@@ -8,9 +8,8 @@ from fastapi.encoders import jsonable_encoder
 
 
 async def auth(request: Request):
-    logging.info(request.query_params)
+    """This function authorizes the access token acquired from oauth login and puts in session token"""
     token = await oauth.client.elixir.authorize_access_token(request)
-    logging.info(token)
     user = await oauth.client.elixir.parse_id_token(request, token)
     request.session['token'] = token
     logging.info('Logged in User:' +  user['email'])
@@ -23,12 +22,14 @@ async def auth(request: Request):
 
 
 async def login(request: Request):
+    """This function redirects to oauth URL configured through oauth client"""
     redirect_uri = request.url_for('oauth_login_auth')
     return await oauth.client.elixir.authorize_redirect(request, redirect_uri)
 
 
 
 async def auth_request(request: Request):
+    """This function validates if a request is authorized or not"""
     if 'token' in request.session:
         token = request.session['token']
         user = await oauth.client.elixir.parse_id_token(request, token)
@@ -41,6 +42,7 @@ async def auth_request(request: Request):
         return None
     
 async def logout(request: Request):
+    """This function clears oauth token from session"""
     request.session.pop('token', None)
     jsonResponse = { 'Process' : 'Elixir_Auth'}
     jsonResponse['logout_success'] = True

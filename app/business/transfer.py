@@ -9,6 +9,7 @@ from app.crud.objects import get_object_access_methods, get_contents
 
 
 async def create_transfer(transferBase: TransferBase,  request: Request):
+    """This function creates a transfer activity for an object"""
     transfer_type = transferBase.transfer_type
     # Code for globus
     if transfer_type == TransferType.GLOBUS:
@@ -27,6 +28,7 @@ async def create_transfer(transferBase: TransferBase,  request: Request):
             return await globus.create_transfer_globus(transferBase, transfer_client, isFolder)
 
 async def check_if_bundle(object_id: str):
+    """This function checks if an object is a bundle or not"""
     object_contents = await get_contents(object_id)
     if len(object_contents) == 0 :
         return False
@@ -34,6 +36,7 @@ async def check_if_bundle(object_id: str):
         return True
 
 async def get_globus_source_from_object(transferBase: TransferBase):
+    """This function checks if an object have a globus source to transfer from"""
     object_access_methods = await get_object_access_methods(transferBase.object_id)
     for am in object_access_methods:
         if (am['type'] == TransferType.GLOBUS):
@@ -43,6 +46,7 @@ async def get_globus_source_from_object(transferBase: TransferBase):
     return transferBase
 
 async def get_transfer_list(request: Request):
+    """This function checks for transfer list for an authenticated user"""
     transfer_status_list = []
     
     # Code for globus
@@ -64,6 +68,7 @@ async def get_transfer_list(request: Request):
 
 
 async def get_transfer(transfer_id: str, request: Request):
+    """This function checks for status for a transfer ID"""
     if transfer_id.startswith('globus'):
         tokens = await globus.verify_globus_code(request)
         if not tokens:
@@ -82,6 +87,7 @@ async def get_transfer(transfer_id: str, request: Request):
     
     
 async def delete_transfer(transfer_id: str, request: Request):
+    """This function deletes/cancels a transfer ID"""
     if transfer_id.startswith('globus'):
         tokens = await globus.verify_globus_code(request)
         if not tokens:
