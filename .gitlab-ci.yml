@@ -82,7 +82,9 @@ include:
     except:
     - triggers
   #- template: Jobs/Test.gitlab-ci.yml
-  ##- template: Jobs/Code-Quality.gitlab-ci.yml
+  - template: Jobs/Code-Quality.gitlab-ci.yml
+    except:
+    - triggers
   - template: Jobs/Deploy.gitlab-ci.yml
   #- template: Jobs/Browser-Performance-Testing.gitlab-ci.yml
   - template: Security/DAST.gitlab-ci.yml
@@ -116,6 +118,8 @@ test-server:
     paths: [environment_url.txt]
   except:
   - triggers
+  - refs:
+      - master
   
   
 test-code:
