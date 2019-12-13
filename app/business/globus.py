@@ -249,7 +249,8 @@ async def delete_transfer_globus(globus_transfer_id: str, transfer_client: Trans
     
     try:
         transfer_result = transfer_client.cancel_task(globus_transfer_id)
-        transfer_response = {'globus_response': transfer_result}
+        transfer_result_json = json.loads(str(transfer_result))
+        transfer_response = {'globus_response': transfer_result_json}
         transfer_response['status'] = 200
         
         return transfer_response

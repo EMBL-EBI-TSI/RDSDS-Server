@@ -9,26 +9,6 @@ from starlette.requests import Request
 
 router = APIRouter()
 
-
-@router.get(
-    '/', 
-     name='oauth_login',
-     summary="Login for OAuth",
-     tags=["OAuth"]
-)
-async def homepage(request: Request):
-    logging.info('in homepage')
-    user = request.session.get('user')
-    if user:
-        data = json.dumps(user)
-        html = (
-            f'<pre>{data}</pre>'
-            '<a href="/logout">logout</a>'
-        )
-        return HTMLResponse(html)
-    return HTMLResponse('<a href="/login">login</a>')
-
-
 @router.get(
     '/login', 
      name='oauth_login_api',
