@@ -6,7 +6,7 @@ from app.crud.objects import get_db_objects, get_checksum, get_contents, get_obj
 
 
 
-async def get_objects(object_id: str, client_host: str, expand: bool = False):
+async def get_objects(object_id: str, client_host: str, expand: bool = False ):
     """Returns dbObject metadata, and a list of access methods that can be used to
      fetch dbObject bytes."""
     # Collecting DrsObject
@@ -68,7 +68,7 @@ async def collect_sub_objects(client_host, object_id):
     if len(sub_objects):
         for sub_obj in sub_objects:
             so = dict(sub_obj)
-            sub_contents = await collect_sub_objects(so['id'])
+            sub_contents = await collect_sub_objects(client_host, so['id'])
             sub_objects_list.append({
                 'name': os.path.basename(so['name']),
                 'id': so['id'],

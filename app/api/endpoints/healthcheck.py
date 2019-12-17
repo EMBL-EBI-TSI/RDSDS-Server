@@ -4,7 +4,7 @@ from starlette.responses import JSONResponse
 router = APIRouter()
 
 @router.get(
-    "/health-check",
+    "",
     summary="Health Check",
     tags=["Health Check"],
 )
