@@ -2,7 +2,6 @@ from fastapi import APIRouter, HTTPException
 from app.models.objects import DrsObject, Error, AccessURL
 from app.business import objects
 from app.business.oauth import auth_request
-from starlette.responses import JSONResponse
 from starlette.requests import Request
 
 router = APIRouter()
@@ -30,7 +29,7 @@ async def get_object(object_id: str, request: Request):
     client_host = request.headers['host']
 
     # Collecting DrsObject
-    data = await objects.get_objects(object_id=object_id, client_host=client_host)
+    data = await objects.get_objects(object_id=object_id, client_host=client_host, expand=True)
 
     return data
 

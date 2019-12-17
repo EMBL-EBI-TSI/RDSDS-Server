@@ -15,11 +15,16 @@ def test_get_object_success():
 
 def test_get_bundle_success():
     with TestClient(app) as api_client:
-        response = api_client.get("/ga4gh/drs/v1/objects/9b338448d613f4aed943d811a76d2350fc719b1bc334c0b64f442ed2f86848d07882958fb24000989a9986dcfaa492509ce02fb77586a60899544e9bda2dcfc1")
+        response = api_client.get("/ga4gh/drs/v1/objects/ebb488e2747120c3fd72ab0ede280294c0f0e4f66522bd3c3a0b60e0c16678ed12d394ceced9cdb4712da01ebc0289d66164e6c23f32f2a8cff11ec547961949")
         assert response.status_code == 200
         drsObject = DrsObject(**response.json())
-        assert drsObject.id == '9b338448d613f4aed943d811a76d2350fc719b1bc334c0b64f442ed2f86848d07882958fb24000989a9986dcfaa492509ce02fb77586a60899544e9bda2dcfc1'
-
+        assert drsObject.id == 'ebb488e2747120c3fd72ab0ede280294c0f0e4f66522bd3c3a0b60e0c16678ed12d394ceced9cdb4712da01ebc0289d66164e6c23f32f2a8cff11ec547961949'
+        contents = drsObject.contents
+        contentFound = False
+        for content in contents:
+            if content.contents:
+                contentFound = True
+        assert contentFound     
 
 def test_get_object_404():
     with TestClient(app) as api_client:

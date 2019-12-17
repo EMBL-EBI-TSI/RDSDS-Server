@@ -68,7 +68,7 @@ async def collect_sub_objects(client_host, object_id):
     if len(sub_objects):
         for sub_obj in sub_objects:
             so = dict(sub_obj)
-            sub_contents = await collect_sub_objects(so['id'])
+            sub_contents = await collect_sub_objects(client_host, so['id'])
             sub_objects_list.append({
                 'name': os.path.basename(so['name']),
                 'id': so['id'],
