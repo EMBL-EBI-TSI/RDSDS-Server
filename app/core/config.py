@@ -28,3 +28,11 @@ API_V1_STR = "/ga4gh/drs/v1"
 HOST = os.getenv("HOST", "0.0.0.0")
 PORT = int(os.getenv("PORT", 5000))
 
+
+ELIXIR_METADATA_URL= os.getenv("ELIXIR_METADATA_URL", "https://login.elixir-czech.org/oidc/.well-known/openid-configuration")
+GLOBUS_CLIENT_ID = os.getenv("GLOBUS_CLIENT_ID", "")
+GLOBUS_CLIENT_SECRET = os.getenv("GLOBUS_CLIENT_SECRET", "")
+SESSION_SECRET_KEY = os.getenv("SESSION_SECRET_KEY", "763384$%^21&*#4567")
+ELIXIR_CLIENT_ID = os.getenv("ELIXIR_CLIENT_ID", "")
+ELIXIR_CLIENT_SECRET = os.getenv("ELIXIR_CLIENT_SECRET", "")
+

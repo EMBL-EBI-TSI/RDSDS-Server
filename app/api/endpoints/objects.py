@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from app.models.objects import DrsObject, Error, AccessURL
 from app.business import objects
+from app.business.oauth import auth_request
 from starlette.requests import Request
 
 router = APIRouter()
@@ -12,6 +13,7 @@ router = APIRouter()
     response_model_skip_defaults=True,
     summary="Get info about a `DrsObject`.",
     tags=["DataRepositoryService"],
+    name="get_object",
     responses={
         201: {'model': Error, 'description': "The operation is delayed and will continue asynchronously. The client should retry this same request after the delay specified by Retry-After header."},
         400: {'model': Error, 'description': "The request is malformed."},
@@ -27,7 +29,7 @@ async def get_object(object_id: str, request: Request):
     client_host = request.headers['host']
 
     # Collecting DrsObject
-    data = await objects.get_objects(object_id=object_id, client_host=client_host)
+    data = await objects.get_objects(object_id=object_id, client_host=client_host, expand=True)
 
     return data
 
