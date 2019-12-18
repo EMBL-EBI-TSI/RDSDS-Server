@@ -78,8 +78,6 @@ stages:
 
 include:
   - template: Jobs/Build.gitlab-ci.yml
-    except:
-    - triggers
   #- template: Jobs/Test.gitlab-ci.yml
   - template: Jobs/Code-Quality.gitlab-ci.yml
     except:
@@ -151,8 +149,29 @@ test-code:
   - pytest --cov app/
   
   
-# Override DAST job to exclude master branch
-.dast:
+# Override jobs to exclude certain condition
+build:
   except:
-    refs:
-      - master
+    - triggers
+
+code_quality:
+  except:
+    - triggers
+    
+container_scanning:
+  except:
+    - triggers
+
+sast:
+  except:
+    - triggers
+
+test-server:
+  except:
+    - master
+    - triggers
+    
+dast:
+  except:
+    - master
+    - triggers
