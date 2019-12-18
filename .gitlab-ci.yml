@@ -166,11 +166,6 @@ sast:
   except:
     - triggers
 
-test-server:
-  except:
-    - master
-    - triggers
-    
 dast:
   except:
     - master
