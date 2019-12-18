@@ -116,8 +116,7 @@ test-server:
   artifacts:
     paths: [environment_url.txt]
   except:
-  - refs:
-      - master
+  - master
   - triggers
   
   
