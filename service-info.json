@@ -1,0 +1,16 @@
+{
+  "id": "string",
+  "name": "string",
+  "type": "string",
+  "description": "string",
+  "organization": {
+    "name": "string",
+    "url": "string"
+  },
+  "contactUrl": "string",
+  "documentationUrl": "string",
+  "createdAt": "string",
+  "updatedAt": "string",
+  "environment": "string",
+  "version": "string"
+}
