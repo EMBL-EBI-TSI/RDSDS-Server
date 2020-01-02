@@ -17,4 +17,3 @@ router = APIRouter()
 )
 async def serviceInfo(request: Request):
     return await serviceinfo.get_service_info(request)
-    
