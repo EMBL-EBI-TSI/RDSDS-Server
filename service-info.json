@@ -1,16 +1,16 @@
 {
-  "id": "string",
-  "name": "string",
-  "type": "string",
-  "description": "string",
+  "id": "uk.ac.ebi.tsi.drs-rdsds",
+  "name": "RDSDS",
+  "type": "org.ga4gh:drs:1.0.0",
+  "description": "Reference DataSet Distribution System",
   "organization": {
-    "name": "string",
-    "url": "string"
+    "name": "EMBL-EBI",
+    "url": "https://www.ebi.ac.uk/"
   },
-  "contactUrl": "string",
-  "documentationUrl": "string",
-  "createdAt": "string",
-  "updatedAt": "string",
-  "environment": "string",
-  "version": "string"
+  "contactUrl": "",
+  "documentationUrl": "",
+  "createdAt": "",
+  "updatedAt": "",
+  "environment": "",
+  "version": ""
 }

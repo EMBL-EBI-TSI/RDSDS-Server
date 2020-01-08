@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends
 from starlette.responses import JSONResponse
 
+from app.business import serviceinfo
 from app.models.service import Service
+from starlette.requests import Request
 
 router = APIRouter()
 
@@ -13,6 +15,6 @@ router = APIRouter()
     tags=["ServiceInfo"],
     name="get_service_info"
 )
-async def serviceInfo():
-    serviceInfo = Service()
+async def serviceInfo(request: Request):
+    return await serviceinfo.get_service_info(request)
     
