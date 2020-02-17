@@ -1,0 +1,16 @@
+{
+  "id": "uk.ac.ebi.tsi.drs-rdsds",
+  "name": "RDSDS",
+  "type": "org.ga4gh:drs:1.0.0",
+  "description": "Reference DataSet Distribution System",
+  "organization": {
+    "name": "EMBL-EBI",
+    "url": "https://www.ebi.ac.uk/"
+  },
+  "contactUrl": "",
+  "documentationUrl": "",
+  "createdAt": "",
+  "updatedAt": "",
+  "environment": "",
+  "version": ""
+}
