@@ -5,10 +5,12 @@ from app.api.endpoints.objects import router as api_router
 from app.api.endpoints.transfer import router as transfer_router
 from app.api.endpoints.globus import router as globus_router
 from app.api.endpoints.oauth import router as oauth_router
+from app.api.endpoints.serviceinfo import router as service_info_router
 from app.core.config import API_V1_STR, PROJECT_NAME, HOST, PORT, SESSION_SECRET_KEY
 from app.core.exception import http_exception_handler
 from app.business.globus_client import load_app_client
 from app.business.oauth_client import load_oauth_client
+from app.business.serviceinfo import create_service_info
 #from core.openapi import custom_openapi#
 from app.db.db_utils import close_postgres_connection, connect_to_postgres
 from fastapi import FastAPI
@@ -21,6 +23,7 @@ app = FastAPI(title=PROJECT_NAME)
 app.add_event_handler("startup", connect_to_postgres)
 app.add_event_handler("startup", load_app_client)
 app.add_event_handler("startup", load_oauth_client)
+app.add_event_handler("startup", create_service_info)
 
 app.add_event_handler("shutdown", close_postgres_connection)
 
@@ -42,14 +45,11 @@ def custom_openapi():
 app.openapi = custom_openapi
 
 app.include_router(api_router, prefix=API_V1_STR)
-
 app.include_router(healthcheck_router, prefix='/health-check')
-
 app.include_router(transfer_router, prefix='/transfer')
-
 app.include_router(globus_router, prefix='/globus')
-
 app.include_router(oauth_router, prefix='/oauth')
+app.include_router(service_info_router, prefix='/service-info')
 
 
 app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET_KEY)

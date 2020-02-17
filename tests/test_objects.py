@@ -15,31 +15,41 @@ def test_get_object_success():
 
 def test_get_bundle_expanded_success():
     with TestClient(app) as api_client:
-        response = api_client.get("/ga4gh/drs/v1/objects/ebb488e2747120c3fd72ab0ede280294c0f0e4f66522bd3c3a0b60e0c16678ed12d394ceced9cdb4712da01ebc0289d66164e6c23f32f2a8cff11ec547961949?expand=True")
+        response = api_client.get("/ga4gh/drs/v1/objects/ebb488e2747120c3fd72ab0ede280294c0f0e4f66522bd3c3a0b60e0c16678ed12d394ceced9cdb4712da01ebc0289d66164e6c23f32f2a8cff11ec547961949?expand=true")
         assert response.status_code == 200
         drsObject = DrsObject(**response.json())
         assert drsObject.id == 'ebb488e2747120c3fd72ab0ede280294c0f0e4f66522bd3c3a0b60e0c16678ed12d394ceced9cdb4712da01ebc0289d66164e6c23f32f2a8cff11ec547961949'
         contents = drsObject.contents
-        contentFound = False
+        nestedContentPresent = False
         for content in contents:
-            if content.contents:
-                contentFound = True
-                break
-        assert contentFound     
+            nestedContents = content.contents
+            if nestedContents:
+                for nestedContent in nestedContents:
+                    if nestedContent.id:
+                        nestedContentPresent = True
+                        break
+                if nestedContentPresent:
+                    break
+        assert nestedContentPresent     
 
-def test_get_bundle_expanded_success():
+def test_get_bundle_not_expanded_success():
     with TestClient(app) as api_client:
-        response = api_client.get("/ga4gh/drs/v1/objects/ebb488e2747120c3fd72ab0ede280294c0f0e4f66522bd3c3a0b60e0c16678ed12d394ceced9cdb4712da01ebc0289d66164e6c23f32f2a8cff11ec547961949?expand=True")
+        response = api_client.get("/ga4gh/drs/v1/objects/ebb488e2747120c3fd72ab0ede280294c0f0e4f66522bd3c3a0b60e0c16678ed12d394ceced9cdb4712da01ebc0289d66164e6c23f32f2a8cff11ec547961949")
         assert response.status_code == 200
         drsObject = DrsObject(**response.json())
         assert drsObject.id == 'ebb488e2747120c3fd72ab0ede280294c0f0e4f66522bd3c3a0b60e0c16678ed12d394ceced9cdb4712da01ebc0289d66164e6c23f32f2a8cff11ec547961949'
         contents = drsObject.contents
-        contentFound = False
+        nestedContentPresent = False
         for content in contents:
-            if content.id:
-                contentFound = True
-                break
-        assert contentFound 
+            nestedContents = content.contents
+            if nestedContents:
+                for nestedContent in nestedContents:
+                    if nestedContent.id:
+                        nestedContentPresent = True
+                        break
+                if nestedContentPresent:
+                    break
+        assert not nestedContentPresent 
 
 def test_get_object_404():
     with TestClient(app) as api_client:
