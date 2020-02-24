@@ -1,1 +1,1 @@
-psql ${DATABASE_URL} < data/dsds-dump.sql
+psql ${DATABASE_URL} < data/rdsds-backup.sql
