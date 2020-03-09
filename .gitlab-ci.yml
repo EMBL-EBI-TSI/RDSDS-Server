@@ -146,15 +146,15 @@ build:
   except:
     - triggers
 
-code_quality:
+.code_quality:
   except:
     - triggers
     
-container_scanning:
+.container_scanning:
   except:
     - triggers
 
-sast:
+.sast:
   except:
     - triggers
 
