@@ -64,7 +64,7 @@ datasets = sqlalchemy.Table(
     sqlalchemy.Column("created_time", sqlalchemy.DateTime),
     sqlalchemy.Column("aliases", sqlalchemy.String),
     
-    sqlalchemy.UniqueConstraint('object_id', 'dataset', 'bundle', 'version', name='unique_checksum')
+    sqlalchemy.UniqueConstraint('object_id', 'dataset', 'bundle', 'version', name='unique_datasets')
 )
 
 metadata.create_all(engine)
