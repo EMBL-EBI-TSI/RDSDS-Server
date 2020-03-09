@@ -110,7 +110,7 @@ test-server:
   - triggers
   
   
-test-code:
+.test-code:
   stage: pre-build-test
   image: dockerhub.ebi.ac.uk/tsi/base-images/dsds_server_base:v1.0.0
   except:
