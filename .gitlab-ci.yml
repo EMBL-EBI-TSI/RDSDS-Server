@@ -108,7 +108,7 @@ test-server:
   except:
   - master
   - triggers
-  - review/gke-*
+  - /^gke-.*$/
   
   
 test-code:
