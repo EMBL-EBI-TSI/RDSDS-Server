@@ -96,6 +96,8 @@ test-server:
   script:
   - cat environment_url.txt
   - export CI_ENVIRONMENT_URL=$(cat environment_url.txt| sed 's/http:/https:/g')
+  - export CI_HOST_URL=$(cat environment_url.txt| sed "s/http:\/\///g")
+  - echo "193.62.55.109  ${CI_HOST_URL}" >> /etc/hosts
   - apt-get update && apt-get install -y apache2-utils curl
   - which ab
   - echo ${CI_ENVIRONMENT_URL}
