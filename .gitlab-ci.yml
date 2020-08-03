@@ -110,16 +110,20 @@ test-server:
   #- triggers
   #- /^gke-.*$/
   rules:
-  - if: '$CI_PIPELINE_SOURCE != "triggers"'
-  - if: '$CI_COMMIT_BRANCH != "master"'
+  - if: '$CI_PIPELINE_SOURCE == "triggers"'
+    when: never
+  - if: '$CI_COMMIT_BRANCH == "master"'
+    when: never
   - if: '$CI_COMMIT_BRANCH !~ /^gke-.*$/'
+    when: never
   
   
 test-code:
   stage: pre-build-test
   image: dockerhub.ebi.ac.uk/tsi/base-images/dsds_server_base:v1.0.0
   rules:
-    - if: '$CI_PIPELINE_SOURCE != "triggers"'
+    - if: '$CI_PIPELINE_SOURCE == "triggers"'
+      when: never
   script:
   # setup database for testing
   - yum install -y postgresql96-server
@@ -149,19 +153,23 @@ test-code:
 # Override jobs to exclude certain condition
 build:
   rules:
-    - if: '$CI_PIPELINE_SOURCE != "triggers"'
+    - if: '$CI_PIPELINE_SOURCE == "triggers"'
+      when: never
     
 code_quality:
   rules:
-    - if: '$CI_PIPELINE_SOURCE != "triggers"'
+    - if: '$CI_PIPELINE_SOURCE == "triggers"'
+      when: never
     
 container_scanning:
   rules:
-    - if: '$CI_PIPELINE_SOURCE != "triggers"'
+    - if: '$CI_PIPELINE_SOURCE == "triggers"'
+      when: never
 
 sast:
   rules:
-    - if: '$CI_PIPELINE_SOURCE != "triggers"'
+    - if: '$CI_PIPELINE_SOURCE == "triggers"'
+      when: never
 
 .dast:
   except:
