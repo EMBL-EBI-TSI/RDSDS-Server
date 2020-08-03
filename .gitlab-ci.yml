@@ -105,16 +105,26 @@ test-server:
   - ab -n 100000 -c 250 ${CI_ENVIRONMENT_URL}/${TEST_PATH_2}
   artifacts:
     paths: [environment_url.txt]
-  except:
-  - master
-  - triggers
+  #except:
+  #- master
+  #- triggers
+  #- /^gke-.*$/
+  rules:
+  - if: '$CI_PIPELINE_SOURCE == "triggers"'
+    when: never
+  - if: '$CI_COMMIT_BRANCH =~ /^(gke|wp|csc)-.*$/'
+    when: never
   
   
 test-code:
   stage: pre-build-test
   image: dockerhub.ebi.ac.uk/tsi/base-images/dsds_server_base:v1.0.0
-  except:
-  - triggers
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "triggers"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH =~ /^(gke|wp|csc)-.*$/'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
   script:
   # setup database for testing
   - yum install -y postgresql96-server
@@ -143,20 +153,34 @@ test-code:
   
 # Override jobs to exclude certain condition
 build:
-  except:
-    - triggers
-
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "triggers"'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
+    
 code_quality:
-  except:
-    - triggers
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "triggers"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH =~ /^(gke|wp|csc)-.*$/'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
     
 container_scanning:
-  except:
-    - triggers
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "triggers"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH =~ /^(gke|wp|csc)-.*$/'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
 
 sast:
-  except:
-    - triggers
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "triggers"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH =~ /^(gke|wp|csc)-.*$/'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
 
 .dast:
   except:
