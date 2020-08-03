@@ -124,6 +124,9 @@ test-code:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "triggers"'
       when: never
+    - if: '$CI_COMMIT_BRANCH ~ /^gke-.*$/'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
   script:
   # setup database for testing
   - yum install -y postgresql96-server
@@ -155,21 +158,31 @@ build:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "triggers"'
       when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
     
 code_quality:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "triggers"'
       when: never
+    - if: '$CI_COMMIT_BRANCH ~ /^gke-.*$/'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
     
 container_scanning:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "triggers"'
       when: never
+    - if: '$CI_COMMIT_BRANCH ~ /^gke-.*$/'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
 
 sast:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "triggers"'
       when: never
+    - if: '$CI_COMMIT_BRANCH ~ /^gke-.*$/'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
 
 .dast:
   except:
