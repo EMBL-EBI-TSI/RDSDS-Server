@@ -12,7 +12,7 @@ review:
     - auto-deploy check_kube_domain
     - auto-deploy download_chart
     #- auto-deploy ensure_namespace
-    - auto-deploy initialize_tiller
+    #- auto-deploy initialize_tiller
     - auto-deploy create_secret
     - kubectl -n ${KUBE_NAMESPACE} get configmaps | kubectl -n ${KUBE_NAMESPACE} get secrets
     - auto-deploy deploy
