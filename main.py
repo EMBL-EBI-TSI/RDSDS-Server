@@ -1,3 +1,5 @@
+# This work is co-funded by the EOSC-hub project (Horizon 2020) under Grant number 777536.
+
 import logging
 
 from app.api.endpoints.healthcheck import router as healthcheck_router
