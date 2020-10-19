@@ -118,7 +118,7 @@ test-server:
   
 test-code:
   stage: pre-build-test
-  image: dockerhub.ebi.ac.uk/tsi/base-images/dsds_server_base:v1.0.0
+  image: python:3.6
   rules:
     - if: '$CI_PIPELINE_SOURCE == "triggers"'
       when: never
@@ -127,7 +127,7 @@ test-code:
     - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
   script:
   # setup database for testing
-  - yum install -y postgresql96-server
+  - apt install postgresql postgresql-client
   - su postgres -c 'PGDATA=/var/lib/pgsql/9.6/data /usr/pgsql-9.6/bin/pg_ctl initdb'
   - su postgres -c '/usr/pgsql-9.6/bin/pg_ctl -D /var/lib/pgsql/9.6/data -l logfile start'
   - sleep 10
