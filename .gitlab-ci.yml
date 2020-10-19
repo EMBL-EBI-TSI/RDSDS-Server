@@ -127,9 +127,9 @@ test-code:
     - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
   script:
   # setup database for testing
-  - apt update && apt install -y postgresql-9.6 postgresql-9.6-client
-  - su postgres -c 'PGDATA=/var/lib/pgsql/9.6/data /usr/pgsql-9.6/bin/pg_ctl initdb'
-  - su postgres -c '/usr/pgsql-9.6/bin/pg_ctl -D /var/lib/pgsql/9.6/data -l logfile start'
+  - apt update && apt install -y postgresql-12 postgresql-client-12
+  - su postgres -c 'PGDATA=/var/lib/pgsql/12/data /usr/pgsql-12/bin/pg_ctl initdb'
+  - su postgres -c '/usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data -l logfile start'
   - sleep 10
   - psql -U postgres -c "CREATE USER tester WITH PASSWORD 'test_password'"
   - psql -U postgres -c "CREATE DATABASE dsds"
