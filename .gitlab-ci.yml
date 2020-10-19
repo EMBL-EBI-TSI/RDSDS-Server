@@ -127,7 +127,7 @@ test-code:
     - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
   script:
   # setup database for testing
-  - apt update && apt install postgresql postgresql-client
+  - apt update -y && apt install postgresql postgresql-client
   - su postgres -c 'PGDATA=/var/lib/pgsql/9.6/data /usr/pgsql-9.6/bin/pg_ctl initdb'
   - su postgres -c '/usr/pgsql-9.6/bin/pg_ctl -D /var/lib/pgsql/9.6/data -l logfile start'
   - sleep 10
