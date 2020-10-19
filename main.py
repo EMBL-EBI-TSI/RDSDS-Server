@@ -36,7 +36,7 @@ def custom_openapi():
         return app.openapi_schema
     openapi_schema = get_openapi(
         title="Reference Data Set Distribution Service",
-        description="Provides a GA4GH DRS compatible interface datasets stored within the ELIXIR network",
+        description="Provides a GA4GH DRS compatible interface datasets stored within the ELIXIR network. This work is co-funded by the EOSC-hub project (Horizon 2020) under Grant number 777536.",
         version="2.0.0",
         routes=app.routes
     )
