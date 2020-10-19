@@ -118,7 +118,7 @@ test-server:
   
 test-code:
   stage: pre-build-test
-  image: python:3.6
+  image: dockerhub.ebi.ac.uk/tsi/base-images/dsds_server_base:v1.0.0
   rules:
     - if: '$CI_PIPELINE_SOURCE == "triggers"'
       when: never
@@ -127,10 +127,8 @@ test-code:
     - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
   script:
   # setup database for testing
-  - echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
-  - wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-  - apt update
-  - apt install -y postgresql-9.6 postgresql-client-9.6
+  - yum install https://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-redhat96-9.6-3.noarch.rpm
+  - yum install -y postgresql96-server postgresql96-contrib postgresql96
   - su postgres -c 'PGDATA=/var/lib/pgsql/9.6/data /usr/pgsql-9.6/bin/pg_ctl initdb'
   - su postgres -c '/usr/pgsql-9.6/bin/pg_ctl -D /var/lib/pgsql/9.6/data -l logfile start'
   - sleep 10
