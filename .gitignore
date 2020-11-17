@@ -1,0 +1,9 @@
+*.pyc
+/.gitlab-trigger-token
+/.project
+/.pydevproject
+py-dsds-server-python*/
+__pycache__/
+.pytest_cache/
+.settings/
+
