@@ -1,1 +1,0 @@
-psql ${DATABASE_URL} < data/db-dump.sql
