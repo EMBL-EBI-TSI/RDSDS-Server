@@ -1,8 +1,10 @@
 from fastapi import APIRouter, HTTPException
 from app.models.objects import DrsObject, Error, AccessURL
+from app.models.datasets import Datasets
 from app.business import objects
 from app.business.oauth import auth_request
 from starlette.requests import Request
+from typing import Dict, List
 
 router = APIRouter()
 
@@ -31,6 +33,19 @@ async def get_object(object_id: str, request: Request, expand: bool = False):
     # Collecting DrsObject
     data = await objects.get_objects(object_id=object_id, client_host=client_host, expand=expand)
 
+    return data
+
+@router.get(
+    "/objects/{dataset_id}/{bundle_id}",
+    response_model=List[Datasets],
+    summary="Get a URL for fetching bytes.",
+    tags=["OmicsIntegration"]
+)
+async def get_objects_by_omics(dataset_id: str, bundle_id: str):
+    """Returns a list of Objects for the dataset
+    """
+    data = await objects.get_objects_by_omics(dataset_id=dataset_id, bundle_id=bundle_id)
+    print(data)
     return data
 
 

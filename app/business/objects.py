@@ -78,3 +78,9 @@ async def collect_sub_objects(client_host, object_id):
     else:
         return None
     return sub_objects_list
+
+
+
+async def get_objects_by_omics(dataset_id: str, bundle_id: str):
+    object_list= []
+    
