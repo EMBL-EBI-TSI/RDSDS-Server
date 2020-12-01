@@ -8,6 +8,6 @@ async def get_objects_by_omics(dataset_id: str, bundle_id: str):
             "status_code": 404,
             "msg": "Requested Dataset was not found"
         })
-    print(dict(object_list))
-    return dict(object_list)
+    print(object_list)
+    return object_list
     
