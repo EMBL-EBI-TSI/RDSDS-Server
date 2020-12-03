@@ -3,7 +3,7 @@ import os
 
 from starlette.responses import JSONResponse
 from app.crud.objects import get_db_objects, get_checksum, get_contents, get_object_access_methods, get_sub_objects
-
+from app.crud.datasets import get_object_meta
 
 
 async def get_objects(object_id: str, client_host: str, expand: bool = False ):
@@ -21,6 +21,11 @@ async def get_objects(object_id: str, client_host: str, expand: bool = False ):
     # Generating DrsObject.self_url
     data['self_uri'] = "drs://{}/{}".format(client_host, data['id'])
 
+    metadata = await get_object_meta(object_id)
+    obj_metadata = dict(metadata)
+
+    data['name'] = obj_metadata['name']
+    data['mime_type'] = obj_metadata['mime_type']
     # Collecting DrsObject > Checksums
     object_checksums = await get_checksum(object_id)
     data['checksums'] = object_checksums

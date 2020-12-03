@@ -8,7 +8,7 @@ class Datasets(BaseModel):
     name: str
     bundle: str
     version: str
-    description: str
-    mime_type: str
+    description: str = None
+    mime_type: str = None
     created_time: datetime
-    aliases: str
+    aliases: str = None

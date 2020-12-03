@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.models.datasets import Datasets
-from app.business.datasets import get_objects_by_omics
+from app.business import datasets
 from typing import Dict, List
 
 router = APIRouter()
@@ -14,6 +14,6 @@ router = APIRouter()
 async def get_objects_by_omics(dataset_id: str, bundle_id: str):
     """Returns a list of Objects for the dataset
     """
-    data = await get_objects_by_omics(dataset_id=dataset_id, bundle_id=bundle_id)
+    data = await datasets.get_objects_by_omics(dataset_id=dataset_id, bundle_id=bundle_id)
     print(data)
     return data
