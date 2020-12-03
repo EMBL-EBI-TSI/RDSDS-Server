@@ -28,6 +28,8 @@ async def get_objects(object_id: str, client_host: str, expand: bool = False ):
     data['mime_type'] = obj_metadata['mime_type']
     # Collecting DrsObject > Checksums
     object_checksums = await get_checksum(object_id)
+    print('object_checksums ::')
+    print(object_checksums)
     data['checksums'] = object_checksums
 
     # Collecting DrsObject > ContentObjects
