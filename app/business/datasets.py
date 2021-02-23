@@ -14,6 +14,7 @@ async def get_objects_by_omics(dataset_id: str, bundle_id: str, client_host: str
     for object in object_list:
       new_object = dict()
       new_object['drsURI'] = "drs://{}/{}".format(client_host, object['object_id'])
+      new_object['drsURL'] = "https://{}/ga4gh/drs/v1/objects/{}".format(client_host, object['object_id'])
       for key in object.keys():
         new_object[key] = object[key]
       print(new_object)
