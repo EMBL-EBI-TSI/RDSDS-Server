@@ -13,3 +13,4 @@ class Datasets(BaseModel):
     created_time: datetime
     aliases: str = None
     drsURI: str
+    drsURL: str
