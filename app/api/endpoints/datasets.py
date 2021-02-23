@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.models.datasets import Datasets
 from app.business import datasets
 from typing import Dict, List
+from starlette.requests import Request
 
 router = APIRouter()
 
@@ -11,9 +12,10 @@ router = APIRouter()
     summary="Get a URL for fetching bytes.",
     tags=["OmicsIntegration"]
 )
-async def get_objects_by_omics(dataset_id: str, bundle_id: str):
+async def get_objects_by_omics(dataset_id: str, bundle_id: str, request: Request):
     """Returns a list of Objects for the dataset
     """
-    data = await datasets.get_objects_by_omics(dataset_id=dataset_id, bundle_id=bundle_id)
+    client_host = request.headers['host']
+    data = await datasets.get_objects_by_omics(dataset_id=dataset_id, bundle_id=bundle_id, client_host=client_host)
     print(data)
     return data
