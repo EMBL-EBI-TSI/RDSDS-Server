@@ -10,8 +10,9 @@ async def get_objects_by_omics(dataset_id: str, bundle_id: str, client_host: str
             "msg": "Requested Dataset was not found"
         })
     new_object_list = []
+
     for object in object_list:
-      new_object = get_objects(object_id=object['object_id'], client_host=client_host)
+      new_object = await get_objects(object_id=object['object_id'], client_host=client_host)
       new_object_list += new_object
 
     print(new_object_list)
