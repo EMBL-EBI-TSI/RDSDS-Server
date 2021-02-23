@@ -12,3 +12,4 @@ class Datasets(BaseModel):
     mime_type: str = None
     created_time: datetime
     aliases: str = None
+    drsURI: str

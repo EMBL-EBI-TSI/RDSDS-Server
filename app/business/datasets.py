@@ -12,7 +12,10 @@ async def get_objects_by_omics(dataset_id: str, bundle_id: str, client_host: str
     new_object_list = []
 
     for object in object_list:
-      new_object = await get_objects(object_id=object['object_id'], client_host=client_host)
+      new_object = {};
+      new_object['drsURI'] = "drs://{}/{}".format(client_host, object['object_id'])
+      for key in object.keys():
+        new_object[key] = object[key]
       new_object_list += new_object
 
     print(new_object_list)
