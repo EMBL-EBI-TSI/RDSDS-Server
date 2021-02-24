@@ -1,5 +1,5 @@
 # This file is a template, and might need editing before it works on your project.
-FROM dockerhub.ebi.ac.uk/tsi/base-images/dsds_server_base:v1.0.0
+FROM centos/python-38-centos7
 
 WORKDIR /usr/src/app
 
