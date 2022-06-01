@@ -13,5 +13,5 @@ starlette==0.12.9
 email-validator==1.0.5
 itsdangerous==1.1.0
 Authlib==0.13
-httpx==0.7.8
+httpx==0.23.0
 datetime==4.3
