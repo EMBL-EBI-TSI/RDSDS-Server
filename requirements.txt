@@ -9,7 +9,7 @@ python-dotenv==0.10.3
 asyncpg==0.21.0
 psycopg2==2.8.3
 globus_sdk==1.8.0
-starlette==0.12.9
+starlette==0.25.0
 email-validator==1.0.5
 itsdangerous==1.1.0
 Authlib==0.13
